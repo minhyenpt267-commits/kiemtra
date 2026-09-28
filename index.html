@@ -1,0 +1,1737 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luyện gõ 10 ngón - Việt Nhật</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --red-900:#0c2d4d;
+  --red-800:#123f66;
+  --red-700:#17517f;
+  --red-600:#1b6699;
+  --red-500:#2079b3;
+  --gold-500:#f0b429;
+  --gold-300:#f8d979;
+  --cream:#fff8ee;
+  --paper:#fffdf9;
+  --ink:#2a1810;
+  --ink-soft:#5a4438;
+  --navy:#1b3b6f;
+  --navy-soft:#7d93b8;
+  --green:#2f8f46;
+  --err:#d32f2f;
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0;
+  font-family:'Be Vietnam Pro',sans-serif;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 8% 12%, rgba(240,180,41,0.18), transparent 40%),
+    radial-gradient(circle at 92% 85%, rgba(240,180,41,0.14), transparent 45%),
+    linear-gradient(160deg, var(--red-800) 0%, var(--red-600) 45%, var(--red-700) 100%);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+.leafpattern{
+  position:fixed; inset:0; pointer-events:none; z-index:0; opacity:0.10;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cpath d='M70 20 C95 35 105 60 90 90 C75 118 45 118 30 90 C15 60 25 35 50 20 C55 35 65 35 70 20 Z' fill='none' stroke='%23F8D979' stroke-width='2.5'/%3E%3C/svg%3E");
+  background-size:140px 140px;
+}
+h1,h2,h3,.display{font-family:'Baloo 2',sans-serif;}
+.hidden{display:none !important;}
+#app{position:relative; z-index:1; min-height:100vh; display:flex; flex-direction:column;}
+
+/* ---------- TOPBAR ---------- */
+#topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 26px;
+  background:linear-gradient(90deg, var(--red-900), var(--red-700));
+  box-shadow:0 3px 14px rgba(0,0,0,0.25);
+  position:relative; z-index:5;
+}
+#brand{display:flex; align-items:center; gap:14px;}
+#logo{
+  width:52px; height:52px; border-radius:14px 4px 14px 4px;
+  background:var(--cream); padding:4px; box-shadow:0 2px 10px rgba(0,0,0,0.3);
+  object-fit:contain;
+}
+#brand-text{color:var(--cream);}
+#brand-text .title{font-family:'Baloo 2',sans-serif; font-size:20px; font-weight:700; letter-spacing:0.3px;}
+#brand-text .sub{font-size:12px; color:var(--gold-300); font-weight:500;}
+#teacher-btn{
+  background:var(--gold-500); color:var(--red-900); border:none; border-radius:10px 3px 10px 3px;
+  padding:10px 18px; font-weight:700; font-family:'Baloo 2',sans-serif; font-size:14px; cursor:pointer;
+  box-shadow:0 3px 0 #b5850e; transition:transform .12s;
+}
+#teacher-btn:hover{transform:translateY(-2px);}
+#teacher-btn:active{transform:translateY(1px); box-shadow:0 1px 0 #b5850e;}
+
+/* ---------- HOME SCREEN ---------- */
+#home-screen{
+  flex:1; display:flex; gap:22px; padding:26px; max-width:1360px; margin:0 auto; width:100%;
+}
+#sidebar{
+  flex:0 0 32%; max-width:400px;
+  background:linear-gradient(165deg, var(--red-700), var(--red-900));
+  border-radius:20px 6px 20px 6px;
+  padding:20px 16px; box-shadow:0 10px 30px rgba(0,0,0,0.3);
+  display:flex; flex-direction:column; gap:12px;
+  border:2px solid rgba(248,217,121,0.35);
+}
+#sidebar h2{
+  color:var(--gold-300); font-size:18px; margin:2px 6px 6px; text-transform:uppercase; letter-spacing:1px;
+  border-bottom:2px dashed rgba(248,217,121,0.4); padding-bottom:10px;
+}
+.class-btn{
+  display:flex; flex-direction:column; align-items:flex-start; gap:2px;
+  background:rgba(255,255,255,0.06); border:1.5px solid rgba(255,255,255,0.15);
+  color:var(--cream); border-radius:14px 4px 14px 4px; padding:12px 16px; cursor:pointer;
+  transition:all .15s; text-align:left; font-family:'Be Vietnam Pro',sans-serif;
+}
+.class-btn:hover{background:rgba(255,255,255,0.14); transform:translateX(4px);}
+.class-btn.active{
+  background:var(--gold-500); color:var(--red-900); border-color:var(--gold-300);
+  box-shadow:0 4px 14px rgba(0,0,0,0.25);
+}
+.class-btn .name{font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16.5px;}
+.class-btn .target{font-size:12px; opacity:0.85;}
+.class-btn.active .target{opacity:0.75;}
+
+#right-panel{
+  flex:1;
+  background:var(--paper);
+  border-radius:22px;
+  padding:26px 30px;
+  box-shadow:0 14px 36px rgba(0,0,0,0.28);
+  display:flex; flex-direction:column; gap:18px;
+  position:relative;
+  border:2px solid var(--gold-300);
+}
+#right-panel::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:6px;
+  background:repeating-linear-gradient(90deg, var(--red-600) 0 22px, var(--gold-500) 22px 44px);
+  border-radius:22px 22px 0 0;
+}
+#mode-config{flex:1; min-height:180px;}
+#mode-placeholder{
+  height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  color:var(--ink-soft); text-align:center; gap:6px; padding:20px;
+}
+#mode-placeholder .slogan{
+  font-family:'Baloo 2',sans-serif; font-size:32px; font-weight:800; color:var(--red-700);
+  line-height:1.3; margin-bottom:8px; text-shadow:1px 1px 0 var(--gold-300);
+}
+#mode-placeholder .keyboard-illustration{width:100%; max-width:440px; height:auto; margin:6px auto 10px;}
+#mode-placeholder .finger-legend{
+  display:flex; flex-wrap:wrap; gap:6px 14px; justify-content:center; font-size:12px; color:var(--ink-soft); max-width:480px;
+}
+#mode-placeholder .finger-legend i{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:4px; vertical-align:middle;}
+.comp-divider{border-top:2px dashed rgba(248,217,121,0.4); margin:8px 4px 2px;}
+.class-btn.competition{border-color:var(--gold-500); background:rgba(240,180,41,0.12);}
+.class-btn.competition.active{background:var(--gold-500); color:var(--red-900);}
+.section-title{font-family:'Baloo 2',sans-serif; color:var(--red-700); font-size:19px; margin:0 0 10px;}
+
+.pill-toggle{display:flex; gap:10px; margin-bottom:16px;}
+.pill-toggle button{
+  flex:1; padding:11px; border-radius:12px 4px 12px 4px; border:2px solid var(--red-600);
+  background:var(--cream); color:var(--red-700); font-weight:700; font-family:'Baloo 2',sans-serif;
+  cursor:pointer; font-size:14.5px; transition:all .15s;
+}
+.pill-toggle button.active{background:var(--red-600); color:#fff; box-shadow:0 3px 0 var(--red-900);}
+
+.finger-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:14px;}
+.finger-btn{
+  background:var(--cream); border:2px solid var(--navy-soft); border-radius:10px; padding:8px 6px;
+  font-size:12px; cursor:pointer; color:var(--navy); font-weight:600; text-align:center;
+}
+.finger-btn.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+.letters-chip-row{display:flex; flex-wrap:wrap; gap:6px; margin:10px 0 16px;}
+.chip{
+  background:var(--gold-300); color:var(--red-900); font-family:'JetBrains Mono',monospace;
+  padding:4px 10px; border-radius:8px; font-weight:600; font-size:13px;
+}
+.speed-row{display:flex; gap:10px;}
+.speed-row button{
+  flex:1; padding:9px; border-radius:10px; border:2px solid var(--gold-500); background:#fff;
+  color:var(--red-700); font-weight:700; cursor:pointer; font-size:13px;
+}
+.speed-row button.active{background:var(--gold-500); color:var(--red-900);}
+
+#student-form{display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; border-top:2px dashed var(--gold-300); padding-top:16px;}
+.field{display:flex; flex-direction:column; gap:5px; flex:1; min-width:140px;}
+.field label{font-size:12.5px; color:var(--ink-soft); font-weight:600;}
+.field input, .field select{
+  padding:10px 12px; border-radius:10px; border:2px solid #e4d3c0; font-size:14.5px;
+  font-family:'Be Vietnam Pro',sans-serif; outline:none; background:#fff;
+}
+.field input:focus, .field select:focus{border-color:var(--red-600);}
+#start-btn{
+  background:linear-gradient(180deg, var(--red-600), var(--red-700));
+  color:#fff; border:none; padding:12px 30px; border-radius:14px 4px 14px 4px;
+  font-family:'Baloo 2',sans-serif; font-weight:700; font-size:16px; cursor:pointer;
+  box-shadow:0 4px 0 var(--red-900); transition:transform .12s;
+}
+#start-btn:hover{transform:translateY(-2px);}
+#start-btn:disabled{opacity:0.5; cursor:not-allowed;}
+#my-results-btn{
+  background:#fff; color:var(--red-700); border:2px solid var(--red-600); padding:10px 22px;
+  border-radius:14px 4px 14px 4px; font-family:'Baloo 2',sans-serif; font-weight:700; font-size:14.5px;
+  cursor:pointer; transition:transform .12s;
+}
+#my-results-btn:hover{transform:translateY(-2px); background:var(--cream);}
+#setting-note{font-size:11.5px; color:var(--ink-soft); margin-top:-6px;}
+
+/* ---------- EXERCISE SCREEN ---------- */
+#exercise-screen{flex:1; display:flex; flex-direction:column; padding:20px 26px; max-width:1200px; margin:0 auto; width:100%; gap:16px;}
+#ex-header{
+  background:var(--paper); border-radius:16px; padding:14px 22px; display:flex; align-items:center;
+  justify-content:space-between; flex-wrap:wrap; gap:12px; box-shadow:0 8px 22px rgba(0,0,0,0.25);
+}
+.ex-info .name{font-family:'Baloo 2',sans-serif; font-weight:700; color:var(--red-700); font-size:16px;}
+.ex-info .sub{font-size:12.5px; color:var(--ink-soft);}
+.ex-stats{display:flex; gap:22px; align-items:center;}
+.stat{text-align:center;}
+.stat .val{font-family:'JetBrains Mono',monospace; font-size:22px; font-weight:700; color:var(--red-700);}
+.stat .lbl{font-size:11px; color:var(--ink-soft); text-transform:uppercase;}
+.ex-controls{display:flex; gap:8px;}
+.ex-controls button{
+  border:none; border-radius:10px; padding:9px 16px; font-weight:700; cursor:pointer;
+  font-family:'Baloo 2',sans-serif; font-size:13.5px;
+}
+#end-btn{background:var(--red-600); color:#fff;}
+
+#ex-body{
+  flex:1; background:var(--paper); border-radius:18px; padding:24px 28px; box-shadow:0 10px 28px rgba(0,0,0,0.25);
+  position:relative; overflow:hidden; display:flex; flex-direction:column;
+}
+#text-panel{
+  font-family:'JetBrains Mono',monospace; font-size:19px; line-height:2; white-space:pre-wrap; word-wrap:break-word;
+  max-height:420px; overflow-y:auto; padding:6px 4px;
+}
+#text-panel .ch{color:var(--navy);}
+#text-panel .ch.done{color:#b9c2ce;}
+#text-panel .ch.current{background:var(--gold-300); border-radius:3px; outline:2px solid var(--gold-500);}
+#text-panel .ch.wrong{color:var(--err); text-decoration:underline wavy var(--err); text-decoration-thickness:2px; text-underline-offset:3px;}
+#game-panel{flex:1; position:relative; background:linear-gradient(180deg,#eaf1ff,#fff); border-radius:12px; overflow:hidden; min-height:380px;}
+.falling-letter{position:absolute; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:26px; color:var(--navy); transition:all .18s ease-out;}
+.falling-letter.caught{background:var(--green); color:#fff; border-radius:8px; padding:2px 6px; transform:scale(1.3); opacity:0;}
+#game-hint{position:absolute; bottom:8px; left:0; right:0; text-align:center; font-size:12px; color:var(--ink-soft);}
+#typeCapture{position:absolute; opacity:0; width:1px; height:1px; pointer-events:none;}
+
+/* ---------- MODALS ---------- */
+.modal-overlay{
+  position:fixed; inset:0; background:rgba(20,8,8,0.55); display:flex; align-items:center; justify-content:center;
+  z-index:50; padding:20px;
+}
+.modal-box{
+  background:var(--paper); border-radius:20px; padding:26px 28px; max-width:900px; width:100%;
+  max-height:88vh; overflow-y:auto; box-shadow:0 20px 50px rgba(0,0,0,0.4); position:relative;
+}
+.modal-box h2{color:var(--red-700); margin-top:0;}
+.modal-close{position:absolute; top:16px; right:18px; background:none; border:none; font-size:22px; cursor:pointer; color:var(--ink-soft);}
+table.result-table{width:100%; border-collapse:collapse; font-size:13.5px; margin-top:12px;}
+table.result-table th{background:var(--red-600); color:#fff; padding:9px 8px; text-align:left; position:sticky; top:0;}
+table.result-table td{padding:8px; border-bottom:1px solid #eee;}
+table.result-table tr:nth-child(even) td{background:#fbf5ea;}
+.diff-up{color:var(--green); font-weight:700;}
+.diff-down{color:var(--err); font-weight:700;}
+.diff-same{color:var(--ink-soft);}
+.tabs{display:flex; gap:8px; margin-bottom:14px;}
+.tabs button{padding:8px 16px; border-radius:10px 10px 0 0; border:none; background:#eee; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;}
+.tabs button.active{background:var(--red-600); color:#fff;}
+.teacher-controls{display:flex; gap:10px; align-items:center; margin-bottom:10px; flex-wrap:wrap;}
+.teacher-controls select{padding:8px 10px; border-radius:8px; border:1.5px solid #ddd;}
+.teacher-controls button{background:var(--gold-500); color:var(--red-900); border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;}
+.row-del{background:none; border:none; color:var(--err); cursor:pointer; font-size:15px; font-weight:700;}
+.row-del:hover{text-decoration:underline;}
+#celebrate-canvas{position:fixed; inset:0; pointer-events:none; z-index:80;}
+#result-modal .big-num{font-size:46px; font-family:'Baloo 2',sans-serif; color:var(--red-700); text-align:center;}
+#result-modal .center{text-align:center;}
+</style>
+</head>
+<body>
+<div class="leafpattern"></div>
+<canvas id="celebrate-canvas" class="hidden"></canvas>
+<div id="app">
+  <div id="topbar">
+    <div id="brand">
+      <img id="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKoAAABlCAYAAADdyHjjAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADpwAAA6cAQeUU90AAB1HSURBVHhe7V0HWBTn1v6f5/+TG40mUZOoMWpMMd0SE00zphhLbCmW2JJYrok3uak3vdxYQVHARhErICCiYlcQREDBgopSLCBdpTcFBPX85z07uy6wFNldYHHex+9ZnPlmdmbnndO+853vf1SosAiQChUWAJWoKiwCKlFVWARUoqqwCKhEVWERUImqwiKgElWFRaDpEPXGDbpx/bo0/E38T0XTgWURlQl4vbSUSq9coeL8fCrKyaGizCzKS0mh9FNRdCEigi4cO07p0TGUfT6BCi+lS5+rBQVUWlQkxwqJVVgcGj1Rr5eV0dXCQirKyqacuHg67buFAv/6mzxHfECO3V+ghe07klXL+2hui3tpLj61fzdvSVb3tiEH7uMzdhztnzWbYnx8KD0mli5nZso5r0P6qrAINFqiXrt6VaRhQuA+2vnvr8mpRy+ad18bISE+59/flmwebE8L2j5EC9p1MNx4n80D7WhemwflGKuWrWh2sxa05Mmnafc331JyaChdzsgQaatK2saNxkVUJstVVuv5ySl00s2d1r7dn6Via7Judb8QziAR0UBY/r9th05k27Ezt0fIrlMXsuNP24c708KHOpIN70c/bf95fM45LHVXvPwahdosoMzoaCrJy+dLUAnbGNE4iAqCsirOOHmKgllFL3vmeZrNJILUrERMkA2kZBIufvQJWvr0c+T4fA9a8+Y75DNmHPlOnkpbv/iCdnz5NW37YjptnjSZvD74iFa88jo5dusp/Rc//qQQGeeZz9IWpoM1S9wtk6bSRbZxr16+rErYRoYGJ+r10jLKYccn8M+/hIhWrNorSk9IQXzaMzFBylVvvEW+U6ZQmN0iOh8QwA5VpnK26lGYdoESA4PoqPNy2vXN97Sy75u0lF8Ku0eYtPjue1rJNQTNnEW5CQl0raREOVJFQ6PhiCpS9DLF7/GnNW/1FzUMkugIyn9DekJtL+n6NEvMtylkrjWT+rxyAtMgcX8w7fnuB1r52hu0jKXtwvYP05y77yGH57tTpKsbXb50SZWujQANQtTr165RXnIyBc+xogVMDNigOoJys3nwIVHNDiztvD4a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">
+      <div id="brand-text">
+        <div class="title">Trường TH, THCS & THPT Việt Nhật</div>
+        <div class="sub">Luyện gõ 10 ngón</div>
+      </div>
+    </div>
+    <button id="teacher-btn">👩‍🏫 Giáo viên - Xem kết quả</button>
+  </div>
+
+  <!-- HOME SCREEN -->
+  <div id="home-screen" class="screen">
+    <aside id="sidebar">
+      <h2>Khối lớp</h2>
+      <div id="class-list"></div>
+      <div style="margin-top:auto; color:var(--gold-300); font-size:11.5px; padding:8px 6px; border-top:2px dashed rgba(248,217,121,0.4);">
+        Kiểu gõ: <b>Telex</b> &nbsp;|&nbsp; Bảng mã: <b>Unicode dựng sẵn</b><br>
+        <span id="server-status-label">Máy chủ: <b>chưa kết nối</b></span> &nbsp;
+        <a href="#" id="server-config-link" style="color:var(--gold-300); text-decoration:underline;">Cài đặt máy chủ LAN</a>
+      </div>
+    </aside>
+    <main id="right-panel">
+      <div id="mode-config">
+        <div id="mode-placeholder">
+          <div class="slogan">Chăm chỉ hôm nay,<br>thành công ngày mai!</div>
+          <svg class="keyboard-illustration" viewBox="0 0 580 225" xmlns="http://www.w3.org/2000/svg">
+      <rect x="10" y="10" width="50" height="44" rx="8" fill="#E63946" stroke="#ffffff" stroke-width="2"/>
+      <text x="35.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">Q</text>
+      <rect x="66" y="10" width="50" height="44" rx="8" fill="#F3722C" stroke="#ffffff" stroke-width="2"/>
+      <text x="91.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">W</text>
+      <rect x="122" y="10" width="50" height="44" rx="8" fill="#F9C74F" stroke="#ffffff" stroke-width="2"/>
+      <text x="147.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">E</text>
+      <rect x="178" y="10" width="50" height="44" rx="8" fill="#90BE6D" stroke="#ffffff" stroke-width="2"/>
+      <text x="203.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">R</text>
+      <rect x="234" y="10" width="50" height="44" rx="8" fill="#90BE6D" stroke="#ffffff" stroke-width="2"/>
+      <text x="259.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">T</text>
+      <rect x="290" y="10" width="50" height="44" rx="8" fill="#43AA8B" stroke="#ffffff" stroke-width="2"/>
+      <text x="315.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">Y</text>
+      <rect x="346" y="10" width="50" height="44" rx="8" fill="#43AA8B" stroke="#ffffff" stroke-width="2"/>
+      <text x="371.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">U</text>
+      <rect x="402" y="10" width="50" height="44" rx="8" fill="#4D908E" stroke="#ffffff" stroke-width="2"/>
+      <text x="427.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">I</text>
+      <rect x="458" y="10" width="50" height="44" rx="8" fill="#577590" stroke="#ffffff" stroke-width="2"/>
+      <text x="483.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">O</text>
+      <rect x="514" y="10" width="50" height="44" rx="8" fill="#277DA1" stroke="#ffffff" stroke-width="2"/>
+      <text x="539.0" y="39.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">P</text>
+      <rect x="38" y="64" width="50" height="44" rx="8" fill="#E63946" stroke="#ffffff" stroke-width="2"/>
+      <text x="63.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">A</text>
+      <rect x="94" y="64" width="50" height="44" rx="8" fill="#F3722C" stroke="#ffffff" stroke-width="2"/>
+      <text x="119.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">S</text>
+      <rect x="150" y="64" width="50" height="44" rx="8" fill="#F9C74F" stroke="#ffffff" stroke-width="2"/>
+      <text x="175.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">D</text>
+      <rect x="206" y="64" width="50" height="44" rx="8" fill="#90BE6D" stroke="#ffffff" stroke-width="2"/>
+      <text x="231.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">F</text>
+      <rect x="262" y="64" width="50" height="44" rx="8" fill="#90BE6D" stroke="#ffffff" stroke-width="2"/>
+      <text x="287.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">G</text>
+      <rect x="318" y="64" width="50" height="44" rx="8" fill="#43AA8B" stroke="#ffffff" stroke-width="2"/>
+      <text x="343.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">H</text>
+      <rect x="374" y="64" width="50" height="44" rx="8" fill="#43AA8B" stroke="#ffffff" stroke-width="2"/>
+      <text x="399.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">J</text>
+      <rect x="430" y="64" width="50" height="44" rx="8" fill="#4D908E" stroke="#ffffff" stroke-width="2"/>
+      <text x="455.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">K</text>
+      <rect x="486" y="64" width="50" height="44" rx="8" fill="#577590" stroke="#ffffff" stroke-width="2"/>
+      <text x="511.0" y="93.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">L</text>
+      <rect x="66" y="118" width="50" height="44" rx="8" fill="#E63946" stroke="#ffffff" stroke-width="2"/>
+      <text x="91.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">Z</text>
+      <rect x="122" y="118" width="50" height="44" rx="8" fill="#F3722C" stroke="#ffffff" stroke-width="2"/>
+      <text x="147.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">X</text>
+      <rect x="178" y="118" width="50" height="44" rx="8" fill="#F9C74F" stroke="#ffffff" stroke-width="2"/>
+      <text x="203.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">C</text>
+      <rect x="234" y="118" width="50" height="44" rx="8" fill="#90BE6D" stroke="#ffffff" stroke-width="2"/>
+      <text x="259.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">V</text>
+      <rect x="290" y="118" width="50" height="44" rx="8" fill="#90BE6D" stroke="#ffffff" stroke-width="2"/>
+      <text x="315.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">B</text>
+      <rect x="346" y="118" width="50" height="44" rx="8" fill="#43AA8B" stroke="#ffffff" stroke-width="2"/>
+      <text x="371.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">N</text>
+      <rect x="402" y="118" width="50" height="44" rx="8" fill="#43AA8B" stroke="#ffffff" stroke-width="2"/>
+      <text x="427.0" y="147.0" font-family="JetBrains Mono, monospace" font-size="20" font-weight="700" fill="#ffffff" text-anchor="middle">M</text>
+      <rect x="66" y="172" width="386" height="40" rx="8" fill="#9AA3AD" stroke="#ffffff" stroke-width="2"/>
+      <text x="259.0" y="198.0" font-family="Be Vietnam Pro, sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">HAI NGÓN CÁI</text>
+          </svg>
+          <div class="finger-legend">
+          <span><i style="background:#E63946"></i>Út trái</span>
+          <span><i style="background:#F3722C"></i>Áp út trái</span>
+          <span><i style="background:#F9C74F"></i>Giữa trái</span>
+          <span><i style="background:#90BE6D"></i>Trỏ trái</span>
+          <span><i style="background:#43AA8B"></i>Trỏ phải</span>
+          <span><i style="background:#4D908E"></i>Giữa phải</span>
+          <span><i style="background:#577590"></i>Áp út phải</span>
+          <span><i style="background:#277DA1"></i>Út phải</span>
+          <span><i style="background:#9AA3AD"></i>Hai ngón cái (phím cách)</span>
+          </div>
+        </div>
+      </div>
+      <div id="student-form">
+        <div class="field">
+          <label>Lớp</label>
+          <select id="stu-class">
+            <option value="">-- Chọn lớp --</option>
+            <option value="2/1">2/1</option>
+            <option value="2/2">2/2</option>
+            <option value="2/3">2/3</option>
+            <option value="3/1">3/1</option>
+            <option value="3/2">3/2</option>
+            <option value="3/3">3/3</option>
+            <option value="4/1">4/1</option>
+            <option value="4/2">4/2</option>
+            <option value="4/3">4/3</option>
+            <option value="5/1">5/1</option>
+            <option value="5/2">5/2</option>
+            <option value="5/3">5/3</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Họ và tên học sinh</label>
+          <select id="stu-name" disabled>
+            <option value="">-- Chọn lớp trước --</option>
+          </select>
+        </div>
+        <button id="start-btn" disabled>Bắt đầu</button>
+        <button id="my-results-btn" type="button">📄 Kết quả của tôi</button>
+      </div>
+      <div id="setting-note"></div>
+    </main>
+  </div>
+
+  <!-- EXERCISE SCREEN -->
+  <div id="exercise-screen" class="screen hidden">
+    <div id="ex-header">
+      <div class="ex-info">
+        <div class="name" id="ex-student"></div>
+        <div class="sub" id="ex-mode"></div>
+      </div>
+      <div class="ex-stats">
+        <div class="stat"><div class="val" id="ex-timer">15:00</div><div class="lbl">Thời gian còn lại</div></div>
+        <div class="stat"><div class="val" id="ex-count">0</div><div class="lbl">Số chữ đã gõ</div></div>
+        <div class="stat"><div class="val" id="ex-wrong" style="color:var(--err);">0</div><div class="lbl">Chữ gõ sai</div></div>
+      </div>
+      <div class="ex-controls">
+        <button id="end-btn">⏹ Kết thúc</button>
+      </div>
+    </div>
+    <div id="ex-body">
+      <div id="text-panel" class="hidden"></div>
+      <div id="game-panel" class="hidden">
+        <div id="game-hint"></div>
+      </div>
+      <textarea id="typeCapture" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT MODAL -->
+<div id="result-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <button class="modal-close" data-close="result-modal">✕</button>
+    <h2 id="result-title">Kết quả luyện tập</h2>
+    <div class="center big-num" id="result-words">0 chữ</div>
+    <div class="center" id="result-sub" style="color:var(--ink-soft); margin-bottom:14px;"></div>
+    <div class="center" id="result-diff" style="font-size:16px; margin-bottom:10px;"></div>
+    <div class="center"><button id="result-ok-btn" style="background:var(--red-600); color:#fff; border:none; padding:10px 26px; border-radius:10px; font-weight:700; cursor:pointer; font-family:'Baloo 2',sans-serif;">Về trang chính</button></div>
+  </div>
+</div>
+
+<!-- STUDENT RESULTS MODAL -->
+<div id="student-modal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:820px;">
+    <button class="modal-close" data-close="student-modal">✕</button>
+    <h2 id="student-modal-title" style="margin-top:0; color:var(--red-700);">📄 Kết quả của tôi</h2>
+    <p style="color:var(--ink-soft); font-size:13px; margin-top:-6px;">Danh sách các lượt luyện gõ đã thực hiện, mới nhất ở dưới cùng.</p>
+    <table class="result-table" id="table-my-results">
+      <thead><tr><th>Stt</th><th>Ngày thực hiện</th><th>Thời gian</th><th>Mục tiêu</th><th>Số chữ gõ được</th><th>Số chữ gõ sai</th><th>Số chữ gõ đúng</th><th>Tăng/giảm</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<div id="teacher-modal" class="modal-overlay hidden">
+  <div class="modal-box" style="max-width:1150px;">
+    <button class="modal-close" data-close="teacher-modal">✕</button>
+    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+      <h2 style="margin:0;">Bảng tổng hợp kết quả</h2>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button id="delete-all-btn" style="background:var(--err); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;">🗑 Xóa tất cả dữ liệu</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button id="tab-name" class="active">Theo học sinh</button>
+      <button id="tab-class">Theo lớp</button>
+      <button id="tab-test">Kiểm tra</button>
+      <button id="tab-comp">Cuộc thi gõ 10 ngón</button>
+    </div>
+    <div id="panel-name">
+      <div class="teacher-controls">
+        <label>Lọc theo tên:</label>
+        <select id="select-student"></select>
+        <button id="delete-student-btn" style="background:var(--err); color:#fff;">🗑 Xóa học sinh này</button>
+        <button id="export-student-btn">⬇ Xuất Excel</button>
+      </div>
+      <table class="result-table" id="table-student">
+        <thead><tr><th>Stt</th><th>Họ tên</th><th>Lớp</th><th>Ngày thực hiện</th><th>Thời gian</th><th>Mục tiêu</th><th>Số chữ gõ được</th><th>Số chữ gõ sai</th><th>Số chữ gõ đúng</th><th>Tăng/giảm</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="panel-class" class="hidden">
+      <div class="teacher-controls">
+        <label>Lọc theo lớp:</label>
+        <select id="select-class"></select>
+        <button id="delete-class-btn" style="background:var(--err); color:#fff;">🗑 Xóa lớp này</button>
+        <button id="export-class-btn">⬇ Xuất Excel</button>
+      </div>
+      <table class="result-table" id="table-class">
+        <thead><tr><th>Stt</th><th>Họ tên</th><th>Ngày thực hiện</th><th>Thời gian</th><th>Mục tiêu</th><th>Số chữ gõ được</th><th>Số chữ gõ sai</th><th>Số chữ gõ đúng</th><th>Tăng/giảm</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="panel-test" class="hidden">
+      <div class="teacher-controls">
+        <label>Lọc theo tên:</label>
+        <select id="select-test-name"></select>
+        <label>Lọc theo lớp:</label>
+        <select id="select-test-class"></select>
+        <button id="export-test-btn">⬇ Xuất Excel</button>
+      </div>
+      <table class="result-table" id="table-test">
+        <thead><tr><th>Stt</th><th>Họ tên</th><th>Lớp</th><th>Ngày thực hiện</th><th>Thời gian</th><th>Mục tiêu</th><th>Số chữ gõ được</th><th>Số chữ gõ sai</th><th>Số chữ gõ đúng</th><th>Tăng/giảm</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="panel-comp" class="hidden">
+      <div class="teacher-controls">
+        <label>Lọc theo tên:</label>
+        <select id="select-comp-name"></select>
+        <label>Lọc theo lớp:</label>
+        <select id="select-comp-class"></select>
+        <label>Lọc theo vòng thi:</label>
+        <select id="select-comp-round"></select>
+        <button id="export-comp-btn">⬇ Xuất Excel</button>
+      </div>
+      <table class="result-table" id="table-comp">
+        <thead><tr><th>Stt</th><th>Họ tên</th><th>Lớp</th><th>Vòng thi</th><th>Ngày thực hiện</th><th>Thời gian</th><th>Mục tiêu</th><th>Số chữ gõ được</th><th>Số chữ cái gõ được</th><th>Số chữ gõ sai</th><th>Số chữ gõ đúng</th><th>Tăng/giảm</th><th></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================ DATA ============================ */
+const GRADES = [
+  {id:'lop2', name:'Lớp 2', target:'50-100 chữ/15 phút', min:50, max:100, kind:'lop2'},
+  {id:'lop3', name:'Lớp 3', target:'100-150 chữ/15 phút', min:100, max:150, kind:'test'},
+  {id:'lop4', name:'Lớp 4', target:'150-200 chữ/15 phút', min:150, max:200, kind:'test'},
+  {id:'lop5', name:'Lớp 5', target:'200-250 chữ/15 phút', min:200, max:250, kind:'test'},
+  {id:'kiemtra', name:'Kiểm tra gõ 10 ngón', target:'Đánh giá tổng hợp', min:150, max:300, kind:'test'},
+];
+
+const FINGERS = [
+  {id:'l1', label:'Út trái', letters:['q','a','z']},
+  {id:'l2', label:'Áp út trái', letters:['w','s','x']},
+  {id:'l3', label:'Giữa trái', letters:['e','d','c']},
+  {id:'l4', label:'Trỏ trái', letters:['r','f','v','t','g','b']},
+  {id:'r4', label:'Trỏ phải', letters:['y','h','n','u','j','m']},
+  {id:'r3', label:'Giữa phải', letters:['i','k']},
+  {id:'r2', label:'Áp út phải', letters:['o','l']},
+  {id:'r1', label:'Út phải', letters:['p']},
+];
+
+const SPEEDS = [{id:'slow', label:'Chậm', ms:2600}, {id:'mid', label:'Trung bình', ms:1800}, {id:'fast', label:'Nhanh', ms:1100}];
+
+/* Danh sách học sinh theo từng lớp, lấy từ file "Danh sách học sinh toàn trường" nhà trường cung cấp. */
+const STUDENTS_BY_CLASS = {
+  "2/1": ["Nguyễn Hạ An", "Salvatori Mia Hoài An", "Đặng Minh Anh", "Nguyễn Văn Mai Anh", "Nguyễn Hoàng Bách", "Lê Thanh Bình", "Lê Minh Hà", "Lê Ngọc Hân", "Nguyễn Đình Hoàng", "Nguyễn Hữu Huy Hoàng", "Hồ Tấn Hưng", "Lê Anh Khoa", "Vũ Trần Minh Khoa", "Đặng Ngọc Minh Khuê", "Bùi Tấn Linh Lam", "Nguyễn Hoàng Lâm", "Phạm Nguyễn Gia Linh", "Trần Hùng Long", "Lê Nguyễn Tuệ Minh", "Nguyễn Công Minh", "Nguyễn Ngọc Thảo Nhi", "Phạm Hoàng Nhi", "Nguyễn Hồng Kim Phúc", "Trương Lê Bảo Thiên", "Nguyễn Tú Uyên", "Nguyễn Tuệ Lâm"],
+  "2/2": ["Nguyễn Hùng Trường An", "Nguyễn Mạnh An", "Phan Đăng Anh", "Phạm Xuân Bách", "Trần Nam Bình", "Edwards Nguyen Cody", "Đỗ Thành Công", "Tán Trương Từ Dĩnh", "Phan Nhật Khang", "Lê Minh Khôi", "Phạm Đăng Khôi", "Cao Nguyễn Lan Khuê", "Huỳnh Thanh Lam", "Nguyễn Hoàng Lâm", "Ngô Nhã Linh", "Nguyễn Tuệ Mi", "Nguyễn Trần Hà My", "Văn Hoàng Nam", "Nguyễn Tuệ Nghi", "Đậu Thảo Nhi", "Huỳnh Tuệ Nhi", "Võ Đặng Yến Nhi", "Tô Xuân Phúc", "Nguyễn Thị Thanh Phượng", "Nguyễn Hoàng Anh Quân", "Nguyễn Sỹ Quang Tùng", "Nguyễn Ngọc Bảo Uyên"],
+  "2/3": ["Haga Taka Aki", "Trần Ngọc Bảo An", "Phạm Văn Bình", "Ngô Lê Thảo Chi", "Phan Hoàng Quỳnh Chi", "Nguyễn Khải Duy", "Nguyễn Gia Huy", "Trần Gia Hy", "Nguyễn Bảo Khang", "Huỳnh Ngọc Đăng Khoa", "Nguyễn Chu Đăng Khoa", "Lê Tuấn Khôi", "Mai Trung Kiên", "Võ Giai Kỳ", "Trương Phạm Yên Mai", "Nguyễn Huỳnh Na Mi", "Trần Khắc Nguyên", "Trần Diệu Nhi", "Huỳnh Phạm Thế Quân", "Hồ Nguyễn Anh Quốc", "Lê Vũ Khánh Quỳnh", "Choe E Ram", "Trần An Thy", "Đinh Tống Tiểu Trân", "Phan Minh Trí", "Trần Anh Trung", "Nguyễn Lê Bảo Vy", "Ngô Phan Ngọc Diệp"],
+  "3/1": ["Nguyễn Lan Anh", "Nguyễn Phương Anh", "Nguyễn Ngọc Bách", "Nguyễn Hoàng Bảo Châu", "Nguyễn Trần Trúc Chi", "Phạm Hải Đăng", "Nguyễn Ngọc Trà Giang", "Phạm Minh Huy", "Đào Hữu Minh Khang", "Lê Doãn Duy Khoa", "Phạm Nguyễn Bảo Khôi", "Lê Hoàng Quý Khương", "Lương Hoàng Mỹ Kim", "Nguyễn Hải Minh", "Trần Minh Nhật", "Bùi Tấn Trọng Phước", "Đinh Công Gia Thịnh", "Huỳnh Minh Thư", "Nguyễn Hồng Vy", "Nguyễn Trần Thục Vy", "Đào Diệu Yên"],
+  "3/2": ["Vũ Nguyễn Tuệ An", "Đinh Việt Hoàng Anh", "Nguyễn Phúc Bảo", "Phạm Thị Bảo Chi", "Phan Quỳnh Dao", "Nguyễn Ngọc Thiên Di", "Huỳnh Kim Đạt", "Nguyễn Trần Vũ Hân", "Nguyễn Đức Huy", "Hồ Đắc Tiến Hưng", "Trần Phan Hồng Hy", "Nguyễn Đăng Khoa", "Lê Nguyên Lam Khuê", "Nguyễn Đức Tùng Lâm", "Võ Đình Phước Minh", "Võ Hoàng A Na", "Nguyễn Trần Khánh Ngân", "Huỳnh Thị Khánh Nguyên", "Lý An Nguyên", "Trần Tấn Phát", "Trịnh Thái Phúc", "Lê Hoàng Quân", "Huỳnh Bảo Thanh", "Lợi Tấn Thịnh", "Thái Ngọc Cát Tiên", "Huỳnh Võ Thanh Trúc", "Cao Gia Tuệ"],
+  "3/3": ["Võ Nguyễn Duy Anh", "Hồ Minh Bảo Châu", "Phạm Ngọc Khánh Chi", "Phan Như Bảo Chi", "Hồ Cường", "Nguyễn Hoàng Gia", "Đoàn Ngọc Hân", "Phạm Khả Hân", "Dương Trung Hiếu", "Ngô Gia Huy", "Phạm Gia Huy", "Cao Đông Hy", "Trần Phan Minh Hy", "Nguyễn Xuân Khuê", "Nguyễn Đình Lâm", "Nguyễn Cát Khánh Linh", "Võ Hoàng Đan Miên", "Nguyễn Hồng Minh", "Trần Đại Quang Minh", "Nguyễn Khả My", "Trương Thành Nam", "Lê Khánh Nguyên", "Sato Nguyên", "Mai Phạm Gia Phú", "Hoàng Nguyễn Hà Phương", "Cù Duy Thiện"],
+  "4/1": ["Đỗ Lâm Anh", "Nguyễn Trần Minh Anh", "Trần Thủy Bình", "Phạm Hoàng Khánh Chi", "Đào Cao Danh", "Trần Ngọc Diệp", "Nguyễn Minh Đăng", "Lê Võ Khánh Hân", "Nguyễn Phương Bảo Hân", "Nguyễn Trần Gia Hân", "Huỳnh Phương Khanh", "Dương Sỹ Đăng Khoa", "Phan Ngọc Minh Khuê", "Nguyễn Phước Lâm", "Nguyễn Tú Linh", "Thái Uy Long", "Nguyễn Xuân Thanh Mẫn", "Nguyễn Bảo Ngọc", "Nguyễn Hoàng Bảo Ngọc", "Huỳnh Linh Nhi", "Nguyễn Hoàng Thịnh", "Trần Anh Thư", "Nguyễn Hoàng Khánh Tiên", "Lê Công Thiện Trí", "Nguyễn Đức Trí", "Phan Lê Thanh Trúc", "Võ Nhã Uyên"],
+  "4/2": ["Lê Hoài An", "Nguyễn Trần Bảo An", "Phùng Quốc Bảo", "Lê Trúc Hải Bình", "Phạm Gia Bình", "Lê Nguyễn Gia Hân", "Cao Bá Minh Khôi", "Mai Huỳnh Khôi", "Trần Ngọc Tường Lam", "Đặng Ngọc Kỳ Lâm", "Phan Trần Trung Nam", "Võ Hoàng Nam", "Nguyễn Phạm Phương Nghi", "Bùi Tấn Linh Như", "Nguyễn Thế Thiên Phú", "Nguyễn Lê Nhã Thư", "Trần Bá Vũ", "Lê Thị Tường Vy", "Phan Trần Bảo Yên"],
+  "4/3": ["Võ Hoài An", "Huỳnh Thiên Ân", "Hồ Kim Gia Hân", "Nguyễn Ngọc Gia Hân", "Phạm Thị Xuân Hiếu", "Đoàn Mạnh Hùng", "Võ Minh Khang", "Nguyễn Hoàng Mai Khuê", "Trần Nguyễn Khánh Linh", "Trần Hoàng Long", "Trần Nhật Minh", "Nguyễn Phúc Hà My", "Nguyễn Phan Tuệ Nghi", "Phan Tấn Nhân", "Trần Viết Minh Nhật", "Hồ Thiên Sơn", "Lưu Võ Anh Thư", "Phạm Minh Thư", "Hà Duy Minh Triết", "Hồ Minh Vân", "Trần Ngọc La Vy"],
+  "5/1": ["Trần Bảo Anh", "Trần Hữu Minh Huy", "Lê Minh Khang", "Huỳnh Tuệ Lâm", "Lê Vũ Bảo Long", "Nguyễn Vũ Khánh Mai", "Nguyễn Bảo Nam", "Phạm Bảo Nam", "Huỳnh Tùng Nhân", "Nguyễn Cao Lạc Nhi", "Nguyễn Hà Tâm Như", "Nguyễn Minh Trí", "Phạm Viết Thanh Trí", "Lê Diệp Vy", "Vũ Hạ Vy"],
+  "5/2": ["Lê Gia An", "Trương Nam Anh", "Lê Lý Qúy Bảo", "Võ Duy Hưng", "Vũ Hồng Gia Hưng", "Đỗ Trọng Nam Khang", "Phạm Văn Đăng Khoa", "Trần Hoàng Vi Khuê", "Trần Ngọc Diệp Khuê", "Đào Nhật Minh", "Tăng Thiện Nhân", "Trần Nguyễn Tuệ Nhi", "Huỳnh Đức Phát", "Châu Ngọc Thiên Phú", "Nguyễn Văn Minh Phúc", "Nguyễn Hà Minh Thiên", "Phạm Minh Toàn", "Lê Phạm Tuấn Tú", "Hứa Khả Vy"],
+  "5/3": ["Nguyễn Ngọc Châu An", "Trần Lê Tuấn Anh", "Trần Quốc Thiên Ân", "Phan Hữu Đạt", "Hồ Hoài Đức", "Đào Ngọc Thanh Hằng", "Phan Như Bảo Hân", "Vũ Trần Minh Hưng", "Giả Khả Lam", "Trịnh Thái Lâm", "Trần Hồ Gia Minh", "Trần Tăng Thiên Minh", "Huỳnh Ngọc Khánh My", "Nguyễn Ngọc Ju Na", "Huỳnh Mẫn Nghi", "Đoàn Ngọc Nhân", "Đào Ngọc Quỳnh Như", "Trần Ngọc Nhã Phương", "Trần Ngọc Anh Thi", "Nguyễn Diệp Anh Thư", "Nguyễn Trương Minh Thư", "Phạm Thị Bảo Thy", "Phạm Minh Trí", "Trần Anh Tuấn", "Phan Đỗ Đồng Văn"],
+};
+
+const COMPETITION_KHOI = [
+  {id:'k3', label:'Khối 3', target:'100-150 chữ/15 phút'},
+  {id:'k4', label:'Khối 4', target:'150-200 chữ/15 phút'},
+  {id:'k5', label:'Khối 5', target:'200-250 chữ/15 phút'},
+];
+const COMPETITION_ROUNDS = [
+  {id:'loai', label:'Vòng loại'},
+  {id:'cket', label:'Vòng chung kết'},
+];
+// Mã đề thi cho từng khối/vòng - giáo viên có thể đổi tại đây
+const COMPETITION_CODES = {
+  'k3-loai':'VL3-2026', 'k3-cket':'CK3-2026',
+  'k4-loai':'VL4-2026', 'k4-cket':'CK4-2026',
+  'k5-loai':'VL5-2026', 'k5-cket':'CK5-2026',
+};
+
+const SENTENCES = [
+"Tự tin là khi em dám giơ tay phát biểu dù câu trả lời có thể chưa đúng.",
+"Mỗi buổi sáng, em tự chuẩn bị sách vở và quần áo trước khi đến trường.",
+"Biết tôn trọng thầy cô và bạn bè giúp lớp học luôn vui vẻ, hòa thuận.",
+"Kỷ luật không có nghĩa là gò bó, mà là biết sắp xếp thời gian hợp lý.",
+"Chăm chỉ luyện tập mỗi ngày sẽ giúp em gõ bàn phím nhanh và chính xác hơn.",
+"Một góc học tập gọn gàng, sạch sẽ sẽ giúp em tập trung học bài tốt hơn.",
+"Sáng tạo bắt đầu từ những câu hỏi nhỏ như tại sao và làm thế nào.",
+"Khi mắc lỗi, em bình tĩnh sửa lại thay vì buồn bã hay đổ lỗi cho người khác.",
+"Tự lập nghĩa là em có thể tự làm những việc vừa sức mà không cần ai nhắc nhở.",
+"Biết lắng nghe ý kiến của bạn cũng là một cách thể hiện sự tôn trọng.",
+"Rèn luyện thói quen dậy sớm giúp em có thêm thời gian ôn bài mỗi ngày.",
+"Giữ gìn vệ sinh lớp học là trách nhiệm của tất cả các bạn học sinh.",
+"Sự tự tin được xây dựng từ những lần cố gắng và không ngại thử sức.",
+"Em luôn cất gọn đồ dùng học tập sau khi sử dụng xong.",
+"Một ý tưởng sáng tạo có thể bắt nguồn từ những điều rất đơn giản trong cuộc sống.",
+"Tôn trọng nội quy trường lớp giúp em trở thành một học sinh gương mẫu.",
+"Kỷ luật giúp em hoàn thành bài tập đúng giờ mà không cần ai nhắc nhở.",
+"Chăm chỉ không phải là học nhiều mà là học đều đặn mỗi ngày.",
+"Rửa tay sạch sẽ trước khi ăn là thói quen tốt cần duy trì hằng ngày.",
+"Óc sáng tạo giúp em tìm ra nhiều cách giải một bài toán khó.",
+"Tự lập từ những việc nhỏ như gấp chăn màn sẽ giúp em trưởng thành hơn.",
+"Biết nói lời cảm ơn và xin lỗi đúng lúc là cách thể hiện sự tôn trọng.",
+"Một thời khóa biểu rõ ràng giúp em rèn luyện tính kỷ luật mỗi ngày.",
+"Sự chăm chỉ hôm nay sẽ là nền tảng cho thành công của em sau này.",
+"Giữ sách vở sạch đẹp cũng là cách em thể hiện sự cẩn thận của mình.",
+"Óc sáng tạo và trí tưởng tượng phong phú giúp bài văn của em thêm sinh động.",
+"Tự tin trình bày trước lớp giúp em rèn luyện kỹ năng giao tiếp tốt hơn.",
+"Biết chia sẻ đồ dùng học tập với bạn bè là một hành động đẹp.",
+"Sắp xếp góc học tập khoa học giúp em tiết kiệm thời gian tìm đồ dùng.",
+"Mỗi ngày cố gắng một chút, em sẽ thấy mình tiến bộ rõ rệt.",
+"Em biết xếp hàng trật tự khi ra vào lớp, không chen lấn xô đẩy bạn.",
+"Sự ngăn nắp trong cặp sách giúp em không bị quên đồ dùng học tập.",
+"Dám nhận lỗi khi làm sai là biểu hiện của một học sinh tự tin, trung thực.",
+"Em tự giác làm bài tập về nhà mà không cần bố mẹ nhắc nhở nhiều lần.",
+"Em biết sắp xếp bàn học ngăn nắp trước khi bắt đầu làm bài tập.",
+"Tự tin không có nghĩa là không bao giờ sai, mà là dám thử lại sau khi vấp ngã.",
+"Mỗi lần hoàn thành một việc khó, em cảm thấy tự tin hơn vào bản thân.",
+"Tự lập giúp em biết cách giải quyết vấn đề mà không phải lúc nào cũng chờ người khác giúp.",
+"Em tự dọn giường ngủ của mình mỗi sáng trước khi đi học.",
+"Tôn trọng sự khác biệt của bạn bè giúp lớp học trở nên gần gũi hơn.",
+"Khi bạn đang nói, em chăm chú lắng nghe thay vì ngắt lời.",
+"Kỷ luật là chìa khóa giúp em biến những mục tiêu nhỏ thành thói quen tốt.",
+"Em luôn hoàn thành bài tập trước khi đi chơi để giữ đúng kỷ luật học tập.",
+"Chăm chỉ ôn bài mỗi tối giúp em tự tin hơn khi làm bài kiểm tra.",
+"Dù bài tập khó, em vẫn kiên trì làm đến khi hiểu rõ vấn đề.",
+"Sạch sẽ không chỉ là vệ sinh cá nhân mà còn là giữ gìn không gian chung.",
+"Em vứt rác đúng nơi quy định để giữ sân trường luôn sạch đẹp.",
+"Một bộ óc sáng tạo luôn tìm được nhiều lời giải cho cùng một vấn đề.",
+"Em thích vẽ tranh theo cách riêng của mình thay vì sao chép người khác.",
+"Tự lập còn thể hiện qua việc em biết tự quản lý thời gian chơi và học.",
+"Khi làm việc nhóm, em luôn tôn trọng ý kiến đóng góp của các bạn.",
+"Giữ lời hứa với bạn bè và thầy cô là cách rèn luyện tính kỷ luật.",
+"Sự chăm chỉ được thể hiện qua từng bài tập nhỏ em hoàn thành mỗi ngày.",
+"Em luôn rửa tay sạch sẽ sau khi chơi thể thao ở sân trường.",
+"Óc sáng tạo giúp em biến những vật liệu bỏ đi thành đồ chơi thú vị.",
+"Tự tin đứng trước đám đông là kỹ năng em rèn luyện dần qua từng buổi học.",
+"Không ai hoàn hảo, nhưng tự lập giúp em học cách tự chịu trách nhiệm với bản thân.",
+"Em xếp gọn giày dép ở cửa lớp để giữ không gian chung sạch sẽ.",
+"Tôn trọng thời gian của người khác cũng là một phần của kỷ luật.",
+"Em thử nhiều cách khác nhau để giải một bài toán, đó chính là sáng tạo.",
+"Chăm chỉ tưới cây mỗi ngày giúp góc học tập của em thêm xanh mát.",
+"Kỷ luật giúp em không trì hoãn công việc đến phút cuối cùng.",
+"Em tự tin giơ tay hỏi khi chưa hiểu bài, vì biết hỏi không có gì xấu.",
+"Giữ gìn sách giáo khoa sạch sẽ giúp các em lớp sau có thể sử dụng lại.",
+"Sáng tạo trong cách trình bày bài làm giúp bài văn của em nổi bật hơn.",
+"Em tự chuẩn bị cặp sách cho ngày mai trước khi đi ngủ.",
+"Tôn trọng nội quy an toàn khi tham gia các hoạt động ngoài trời là điều cần thiết.",
+"Sự kỷ luật trong luyện tập thể thao giúp em có sức khỏe tốt hơn.",
+"Em chăm chỉ luyện viết chữ đẹp mỗi tuần để cải thiện nét chữ của mình.",
+"Một lớp học sạch sẽ bắt đầu từ ý thức của từng học sinh.",
+"Óc sáng tạo giúp em kể lại một câu chuyện quen thuộc theo cách mới lạ.",
+"Tự tin vào khả năng của mình giúp em không ngại đối mặt với thử thách mới.",
+"Tự lập từ nhỏ sẽ giúp em trở thành người có trách nhiệm khi lớn lên.",
+"Em luôn cảm ơn khi được thầy cô hoặc bạn bè giúp đỡ.",
+];
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function buildPassage(min,max){
+  const target = Math.floor(min + Math.random()*(max-min));
+  let pool = shuffle(SENTENCES);
+  let idx = 0;
+  let words = 0;
+  let sentences = [];
+  while(words < target){
+    if(idx >= pool.length){ pool = shuffle(SENTENCES); idx = 0; }
+    const s = pool[idx++];
+    sentences.push(s);
+    words += s.split(/\s+/).filter(Boolean).length;
+    if(words >= max) break;
+  }
+  let out = '';
+  for(let i=0;i<sentences.length;i++){
+    const isLast = i === sentences.length-1;
+    const isParaBreak = (i+1)%4===0 && !isLast;
+    out += sentences[i];
+    if(!isLast) out += isParaBreak ? '\n' : ' ';
+  }
+  return out;
+}
+
+/* ============================ STORAGE ============================ */
+/* Máy chủ LAN (tùy chọn): nếu đã cài đặt địa chỉ máy chủ, phần mềm sẽ ưu tiên
+   đọc/ghi kết quả qua mạng LAN để mọi máy trong phòng máy cùng thấy chung một
+   dữ liệu. Nếu không kết nối được (mất mạng, chưa cài đặt...), phần mềm tự
+   động dùng bộ nhớ cục bộ của máy đó để không bị gián đoạn khi luyện tập. */
+function getServerEndpoint(){
+  try{ return (localStorage.getItem('server_endpoint') || '').trim(); }catch(e){ return ''; }
+}
+function setServerEndpoint(url){
+  try{ localStorage.setItem('server_endpoint', url); }catch(e){}
+}
+async function pingServer(base){
+  try{
+    const res = await fetch(base.replace(/\/$/,'') + '/api/results', {method:'GET'});
+    return res.ok;
+  }catch(e){ return false; }
+}
+async function loadResults(){
+  const endpoint = getServerEndpoint();
+  if(endpoint){
+    try{
+      const res = await fetch(endpoint.replace(/\/$/,'') + '/api/results', {method:'GET'});
+      if(res.ok){
+        const data = await res.json();
+        if(Array.isArray(data)){
+          try{ localStorage.setItem('typing_results_cache', JSON.stringify(data)); }catch(e){}
+          updateServerStatusLabel(true);
+          return data;
+        }
+      }
+    }catch(e){ /* máy chủ không phản hồi, dùng dữ liệu cục bộ tạm thời */ }
+    updateServerStatusLabel(false);
+  }
+  try{
+    if(window.storage){
+      const r = await window.storage.get('typing_results', true);
+      return r ? JSON.parse(r.value) : [];
+    }
+  }catch(e){ /* fall through to local storage */ }
+  try{
+    const raw = localStorage.getItem('typing_results_cache') || localStorage.getItem('typing_results');
+    return raw ? JSON.parse(raw) : [];
+  }catch(e){ return []; }
+}
+async function saveResults(list){
+  const endpoint = getServerEndpoint();
+  let savedRemote = false;
+  if(endpoint){
+    try{
+      const res = await fetch(endpoint.replace(/\/$/,'') + '/api/results', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(list),
+      });
+      savedRemote = res.ok;
+    }catch(e){ savedRemote = false; }
+    updateServerStatusLabel(savedRemote);
+  }
+  try{
+    if(window.storage){ await window.storage.set('typing_results', JSON.stringify(list), true); }
+  }catch(e){}
+  try{ localStorage.setItem('typing_results_cache', JSON.stringify(list)); }catch(e){}
+}
+function updateServerStatusLabel(connected){
+  const el = document.getElementById('server-status-label');
+  if(!el) return;
+  const endpoint = getServerEndpoint();
+  if(!endpoint){ el.innerHTML = 'Máy chủ: <b>chưa kết nối</b>'; return; }
+  el.innerHTML = connected
+    ? `Máy chủ: <b style="color:#8fe3a0;">đã kết nối</b>`
+    : `Máy chủ: <b style="color:#f3a1a1;">mất kết nối</b>`;
+}
+
+/* ============================ STATE ============================ */
+let state = {
+  gradeId:null,
+  lop2Mode:null, // 'game' | 'practice'
+  finger:null,
+  speed:'mid',
+  passage:'',
+  idx:0,
+  tokens:[],
+  tokenIdx:0,
+  wordsCount:0,
+  wrongWords:0,
+  timeLeft:900,
+  timerId:null,
+  startTimestamp:null,
+  running:false,
+  gameSpawnId:null,
+  gameActiveLetter:null,
+  gameCatches:0,
+  compKhoi:null,
+  compRound:null,
+  compUnlocked:false,
+};
+
+/* ============================ HOME SCREEN RENDER ============================ */
+const classListEl = document.getElementById('class-list');
+GRADES.forEach(g=>{
+  const btn = document.createElement('div');
+  btn.className = 'class-btn';
+  btn.dataset.id = g.id;
+  const modeLabel = g.kind==='lop2' ? 'Trò chơi & Luyện gõ' : (g.id==='kiemtra' ? 'Kiểm tra' : 'Luyện gõ');
+  btn.innerHTML = `<span class="name">${g.name}</span><span class="target">${modeLabel} · Mục tiêu ${g.target}</span>`;
+  btn.addEventListener('click', ()=>selectGrade(g.id));
+  classListEl.appendChild(btn);
+});
+const compDivider = document.createElement('div');
+compDivider.className = 'comp-divider';
+classListEl.appendChild(compDivider);
+const compBtn = document.createElement('div');
+compBtn.className = 'class-btn competition';
+compBtn.dataset.id = 'cuocthi';
+compBtn.innerHTML = `<span class="name">🏆 Cuộc thi gõ 10 ngón</span><span class="target">Khối 3, 4, 5 · Vòng loại & Chung kết</span>`;
+compBtn.addEventListener('click', selectCompetition);
+classListEl.appendChild(compBtn);
+
+function selectCompetition(){
+  state.gradeId = 'cuocthi';
+  state.lop2Mode = null;
+  state.finger = null;
+  state.compKhoi = null;
+  state.compRound = null;
+  state.compUnlocked = false;
+  document.querySelectorAll('.class-btn').forEach(b=>b.classList.toggle('active', b.dataset.id==='cuocthi'));
+  renderModeConfig();
+  validateStart();
+}
+
+function selectGrade(id){
+  state.gradeId = id;
+  state.lop2Mode = null;
+  state.finger = null;
+  document.querySelectorAll('.class-btn').forEach(b=>b.classList.toggle('active', b.dataset.id===id));
+  renderModeConfig();
+  validateStart();
+}
+
+function getActiveGrade(){
+  if(state.gradeId === 'cuocthi'){
+    const khoi = COMPETITION_KHOI.find(k=>k.id===state.compKhoi);
+    const round = COMPETITION_ROUNDS.find(r=>r.id===state.compRound);
+    if(!khoi || !round) return null;
+    return {
+      id: 'cuocthi-'+khoi.id+'-'+round.id,
+      name: `Cuộc thi gõ 10 ngón · ${khoi.label} · ${round.label}`,
+      target: khoi.target, kind:'test',
+      isCompetition:true, khoiLabel:khoi.label, roundLabel:round.label,
+    };
+  }
+  return GRADES.find(g=>g.id===state.gradeId);
+}
+
+function renderModeConfig(){
+  const el = document.getElementById('mode-config');
+  if(state.gradeId === 'cuocthi'){ renderCompetitionConfig(el); return; }
+  const grade = GRADES.find(g=>g.id===state.gradeId);
+  if(!grade){ el.innerHTML = ''; return; }
+  if(grade.kind === 'lop2'){
+    el.innerHTML = `
+      <div class="section-title">Lớp 2 — chọn cấp độ luyện tập</div>
+      <div class="pill-toggle">
+        <button id="pick-game">🎮 Trò chơi</button>
+        <button id="pick-practice">⌨️ Luyện gõ</button>
+      </div>
+      <div id="lop2-detail"></div>
+    `;
+    document.getElementById('pick-game').addEventListener('click', ()=>{ state.lop2Mode='game'; renderLop2Detail(); validateStart(); });
+    document.getElementById('pick-practice').addEventListener('click', ()=>{ state.lop2Mode='practice'; state.finger=null; renderLop2Detail(); validateStart(); });
+  } else {
+    el.innerHTML = `
+      <div class="section-title">${grade.name} — Kiểm tra gõ 10 ngón</div>
+      <p style="color:var(--ink-soft); line-height:1.7;">Học sinh sẽ gõ lại một đoạn văn khoảng 500–1000 từ trong thời gian 15 phút.
+      Mục tiêu tham khảo: <b style="color:var(--red-700);">${grade.target}</b>.</p>
+      <p style="color:var(--ink-soft); font-size:13px;">Nội dung bài được tạo ngẫu nhiên mỗi lần luyện tập, xoay quanh các chủ đề: tự tin, tự lập, tôn trọng, kỷ luật, chăm chỉ, sạch sẽ, sáng tạo.</p>
+    `;
+  }
+}
+
+function renderCompetitionConfig(el){
+  el.innerHTML = `
+    <div class="section-title">🏆 Cuộc thi gõ 10 ngón — chọn khối</div>
+    <div class="pill-toggle" id="khoi-toggle"></div>
+    <div id="comp-round-area"></div>
+  `;
+  const khoiToggle = document.getElementById('khoi-toggle');
+  COMPETITION_KHOI.forEach(k=>{
+    const b = document.createElement('button');
+    b.textContent = k.label; b.dataset.id = k.id;
+    b.addEventListener('click', ()=>{
+      state.compKhoi = k.id; state.compRound = null; state.compUnlocked = false;
+      renderCompRounds(); validateStart();
+    });
+    khoiToggle.appendChild(b);
+  });
+  renderCompRounds();
+}
+function renderCompRounds(){
+  document.querySelectorAll('#khoi-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.id===state.compKhoi));
+  const area = document.getElementById('comp-round-area');
+  if(!state.compKhoi){ area.innerHTML=''; return; }
+  const khoi = COMPETITION_KHOI.find(k=>k.id===state.compKhoi);
+  area.innerHTML = `
+    <div class="section-title" style="font-size:15px; margin-top:14px;">Chọn vòng thi — ${khoi.label} (Mục tiêu ${khoi.target})</div>
+    <div class="speed-row" id="round-toggle"></div>
+    <div id="code-area" style="margin-top:14px;"></div>
+  `;
+  const roundToggle = document.getElementById('round-toggle');
+  COMPETITION_ROUNDS.forEach(r=>{
+    const b = document.createElement('button');
+    b.textContent = r.label; b.dataset.id = r.id;
+    b.addEventListener('click', ()=>{ state.compRound = r.id; state.compUnlocked = false; renderCompCode(); validateStart(); });
+    roundToggle.appendChild(b);
+  });
+  renderCompCode();
+}
+function renderCompCode(){
+  document.querySelectorAll('#round-toggle button').forEach(b=>b.classList.toggle('active', b.dataset.id===state.compRound));
+  const area = document.getElementById('code-area');
+  if(!state.compRound){ area.innerHTML=''; return; }
+  if(state.compUnlocked){
+    area.innerHTML = `<div style="color:var(--green); font-weight:700;">✔ Đã mở khóa vòng thi — sẵn sàng bắt đầu!</div>`;
+    return;
+  }
+  area.innerHTML = `
+    <div class="field" style="max-width:260px;">
+      <label>Nhập mã đề thi</label>
+      <input type="text" id="comp-code-input" placeholder="Mã đề...">
+    </div>
+    <div id="comp-code-err" style="color:var(--err); font-size:12.5px; min-height:16px; margin-top:4px;"></div>
+    <button id="comp-code-submit" style="margin-top:6px; background:var(--red-600); color:#fff; border:none; padding:9px 20px; border-radius:10px; font-weight:700; cursor:pointer; font-family:'Baloo 2',sans-serif;">Mở khóa</button>
+  `;
+  document.getElementById('comp-code-submit').addEventListener('click', tryUnlockComp);
+  document.getElementById('comp-code-input').addEventListener('keydown', e=>{ if(e.key==='Enter') tryUnlockComp(); });
+}
+function tryUnlockComp(){
+  const input = document.getElementById('comp-code-input');
+  const key = state.compKhoi+'-'+state.compRound;
+  if(input.value.trim() === COMPETITION_CODES[key]){
+    state.compUnlocked = true;
+    renderCompCode();
+    validateStart();
+  } else {
+    document.getElementById('comp-code-err').textContent = 'Mã đề không đúng, vui lòng thử lại.';
+  }
+}
+
+function renderLop2Detail(){
+  const wrap = document.getElementById('lop2-detail');
+  document.getElementById('pick-game').classList.toggle('active', state.lop2Mode==='game');
+  document.getElementById('pick-practice').classList.toggle('active', state.lop2Mode==='practice');
+  if(state.lop2Mode==='game'){
+    wrap.innerHTML = `
+      <div class="section-title" style="font-size:15px;">Chọn ngón tay phụ trách</div>
+      <div class="finger-grid" id="finger-grid"></div>
+      <div class="letters-chip-row" id="letters-row"></div>
+      <div class="section-title" style="font-size:15px;">Tốc độ rơi chữ</div>
+      <div class="speed-row" id="speed-row"></div>
+    `;
+    const grid = document.getElementById('finger-grid');
+    FINGERS.forEach(f=>{
+      const b = document.createElement('button');
+      b.className='finger-btn'; b.textContent=f.label; b.dataset.id=f.id;
+      b.addEventListener('click', ()=>{ state.finger=f.id; renderLop2Detail(); validateStart(); });
+      grid.appendChild(b);
+    });
+    document.querySelectorAll('.finger-btn').forEach(b=>b.classList.toggle('active', b.dataset.id===state.finger));
+    const chipRow = document.getElementById('letters-row');
+    const f = FINGERS.find(x=>x.id===state.finger);
+    chipRow.innerHTML = f ? f.letters.map(l=>`<span class="chip">${l}</span>`).join('') : '<span style="color:var(--ink-soft); font-size:13px;">Chọn một ngón tay để xem các chữ phụ trách</span>';
+    const speedRow = document.getElementById('speed-row');
+    SPEEDS.forEach(s=>{
+      const b=document.createElement('button'); b.textContent=s.label; b.dataset.id=s.id;
+      if(s.id===state.speed) b.classList.add('active');
+      b.addEventListener('click', ()=>{ state.speed=s.id; renderLop2Detail(); });
+      speedRow.appendChild(b);
+    });
+  } else if(state.lop2Mode==='practice'){
+    wrap.innerHTML = `<p style="color:var(--ink-soft); line-height:1.7;">Học sinh sẽ gõ lại một đoạn văn khoảng 200 từ, phù hợp với học sinh lớp 2, trong thời gian tối đa 15 phút.</p>`;
+  } else {
+    wrap.innerHTML = '';
+  }
+}
+
+function validateStart(){
+  const name = document.getElementById('stu-name').value.trim();
+  const cls = document.getElementById('stu-class').value.trim();
+  let ok = state.gradeId && name && cls;
+  if(state.gradeId === 'cuocthi'){
+    ok = ok && !!state.compKhoi && !!state.compRound && state.compUnlocked;
+  } else {
+    const grade = GRADES.find(g=>g.id===state.gradeId);
+    if(grade && grade.kind==='lop2'){
+      if(!state.lop2Mode) ok=false;
+      if(state.lop2Mode==='game' && !state.finger) ok=false;
+    }
+  }
+  document.getElementById('start-btn').disabled = !ok;
+}
+document.getElementById('stu-name').addEventListener('change', validateStart);
+document.getElementById('stu-class').addEventListener('change', ()=>{
+  populateStudentNameOptions();
+  validateStart();
+});
+document.getElementById('start-btn').addEventListener('click', startExercise);
+document.getElementById('my-results-btn').addEventListener('click', openMyResults);
+
+function populateStudentNameOptions(){
+  const cls = document.getElementById('stu-class').value;
+  const nameSelect = document.getElementById('stu-name');
+  const names = STUDENTS_BY_CLASS[cls];
+  if(!cls || !names){
+    nameSelect.innerHTML = '<option value="">-- Chọn lớp trước --</option>';
+    nameSelect.disabled = true;
+    return;
+  }
+  nameSelect.innerHTML = '<option value="">-- Chọn tên của em --</option>' + names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  nameSelect.disabled = false;
+}
+
+async function openMyResults(){
+  const name = document.getElementById('stu-name').value.trim();
+  if(!name){
+    await showAlert('Vui lòng nhập họ và tên ở khung bên phải trước, sau đó bấm lại "Kết quả của tôi" nhé.');
+    document.getElementById('stu-name').focus();
+    return;
+  }
+  const results = await loadResults();
+  const rows = getStudentRows(results, name);
+  document.getElementById('student-modal-title').textContent = `📄 Kết quả của: ${name}`;
+  const tbody = document.querySelector('#table-my-results tbody');
+  tbody.innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.dateStr}</td><td>${r.duration}</td><td>${r.mode} · ${r.target}</td><td>${r.words}</td><td>${wrongCell(r)}</td><td>${correctCell(r)}</td><td>${diffHtml(r.diff)}</td></tr>`).join('') || '<tr><td colspan="8" style="text-align:center; color:var(--ink-soft);">Chưa có kết quả nào được lưu với tên này.</td></tr>';
+  document.getElementById('student-modal').classList.remove('hidden');
+}
+
+/* ============================ EXERCISE FLOW ============================ */
+const homeScreen = document.getElementById('home-screen');
+const exerciseScreen = document.getElementById('exercise-screen');
+const textPanel = document.getElementById('text-panel');
+const gamePanel = document.getElementById('game-panel');
+const typeCapture = document.getElementById('typeCapture');
+
+function startExercise(){
+  const grade = getActiveGrade();
+  state.timeLeft = 900;
+  state.idx = 0;
+  state.tokens = [];
+  state.tokenIdx = 0;
+  state.wordsCount = 0;
+  state.wrongWords = 0;
+  state.gameCatches = 0;
+  state.running = true;
+
+  document.getElementById('ex-student').textContent = `${document.getElementById('stu-name').value.trim()} — Lớp ${document.getElementById('stu-class').value.trim()}`;
+  let modeLabel = grade.name;
+  if(grade.isCompetition){
+    // grade.name already fully describes "Cuộc thi · Khối · Vòng"
+  } else if(grade.kind==='lop2'){
+    modeLabel += state.lop2Mode==='game' ? ` · Trò chơi (${FINGERS.find(f=>f.id===state.finger).label})` : ' · Luyện gõ';
+  } else {
+    modeLabel += ' · Kiểm tra';
+  }
+  document.getElementById('ex-mode').textContent = modeLabel + ' · Mục tiêu: ' + grade.target;
+  document.getElementById('ex-wrong').textContent = '0';
+
+  homeScreen.classList.add('hidden');
+  exerciseScreen.classList.remove('hidden');
+
+  if(grade.kind==='lop2' && state.lop2Mode==='game'){
+    textPanel.classList.add('hidden');
+    gamePanel.classList.remove('hidden');
+    startGameMode();
+  } else {
+    gamePanel.classList.add('hidden');
+    textPanel.classList.remove('hidden');
+    const wordRange = grade.kind==='lop2' ? [180,220] : [500,1000];
+    state.passage = buildPassage(wordRange[0], wordRange[1]);
+    state.tokens = parseTokens(state.passage);
+    renderPassage();
+    typeCapture.value='';
+    typeCapture.focus();
+  }
+  startTimer();
+}
+
+/* Tách đoạn văn thành các "từ" (không chứa khoảng trắng) kèm theo khoảng trắng
+   theo sau, để việc gõ được xác nhận theo TỪNG TỪ - cho phép học sinh gõ hết
+   các chữ cái rồi mới gõ dấu thanh (đúng theo cách gõ Telex thực tế), thay vì
+   bắt buộc dấu thanh phải xuất hiện ngay khi gõ nguyên âm. */
+function parseTokens(text){
+  const tokens = [];
+  const re = /(\S+)(\s*)/g;
+  let m;
+  while((m = re.exec(text))){
+    const word = m[1];
+    const delim = m[2];
+    tokens.push({ word, start:m.index, wordEnd:m.index+word.length, delim, delimLen:delim.length });
+  }
+  return tokens;
+}
+
+function renderPassage(){
+  let html = '';
+  for(let i=0;i<state.passage.length;i++){
+    const c = state.passage[i];
+    html += `<span class="ch" data-i="${i}">${c===' '?'&nbsp;':c===''?'':escapeHtml(c)}</span>`;
+  }
+  textPanel.innerHTML = html;
+  state.spanEls = Array.from(textPanel.querySelectorAll('.ch'));
+  state.prevLen = 0;
+  if(state.spanEls[0]) state.spanEls[0].classList.add('current');
+  state.wordsCount = 0;
+  state.wrongWords = 0;
+  document.getElementById('ex-count').textContent = 0;
+  document.getElementById('ex-wrong').textContent = 0;
+}
+function escapeHtml(c){
+  if(c==='<') return '&lt;'; if(c==='>') return '&gt;'; if(c==='&') return '&amp;';
+  if(c==='\n') return '<br>'; return c;
+}
+function charSpan(i){ return state.spanEls[i]; }
+
+/* Tính số từ đã gõ qua và số từ gõ sai dựa trên độ dài đã gõ hiện tại,
+   so khớp trực tiếp với nội dung học sinh đang gõ trong textarea - không
+   khóa/chặn gì cả, học sinh có thể dùng Backspace sửa lại bất cứ lúc nào. */
+function computeProgress(typedLen){
+  const typed = typeCapture.value;
+  let words = 0, wrong = 0;
+  for(const token of state.tokens){
+    if(token.wordEnd > typedLen) break;
+    words++;
+    if(typed.slice(token.start, token.wordEnd) !== token.word) wrong++;
+  }
+  return {words, wrong};
+}
+
+/* Gõ tự do, không khóa/chặn gì cả: học sinh gõ sai chữ nào sẽ được báo ngay
+   (gạch chân đỏ) tại chữ đó, có thể dùng Backspace xóa để gõ lại; những chữ
+   gõ sau đó nếu đúng vẫn được tính đúng bình thường. */
+function updateTypingDisplay(){
+  const typed = typeCapture.value;
+  const newLen = Math.min(typed.length, state.passage.length);
+  const prevLen = state.prevLen === undefined ? 0 : state.prevLen;
+  const lo = Math.max(0, Math.min(prevLen, newLen) - 1);
+  const hi = Math.min(state.passage.length - 1, Math.max(prevLen, newLen));
+  for(let i=lo; i<=hi; i++){
+    const span = state.spanEls[i];
+    if(!span) continue;
+    span.classList.remove('done','current','wrong');
+    if(i < newLen){
+      span.classList.add(typed[i] === state.passage[i] ? 'done' : 'wrong');
+    } else if(i === newLen){
+      span.classList.add('current');
+    }
+  }
+  state.prevLen = newLen;
+  state.idx = newLen;
+
+  const prog = computeProgress(newLen);
+  state.wordsCount = prog.words;
+  state.wrongWords = prog.wrong;
+  document.getElementById('ex-count').textContent = state.wordsCount;
+  document.getElementById('ex-wrong').textContent = state.wrongWords;
+
+  if(newLen >= state.passage.length){
+    finishExercise(true);
+  }
+}
+
+typeCapture.addEventListener('input', ()=>{
+  if(!state.running) return;
+  if(!textPanel || textPanel.classList.contains('hidden')) return;
+  updateTypingDisplay();
+});
+typeCapture.addEventListener('paste', e=>e.preventDefault());
+document.addEventListener('click', (e)=>{
+  if(!exerciseScreen.classList.contains('hidden') && document.getElementById('text-panel').classList.contains('hidden')===false){
+    typeCapture.focus();
+  }
+});
+
+/* ---------- GAME MODE ---------- */
+function startGameMode(){
+  const f = FINGERS.find(x=>x.id===state.finger);
+  const speed = SPEEDS.find(s=>s.id===state.speed);
+  document.getElementById('game-hint').textContent = `Ngón phụ trách: ${f.label} — gõ đúng chữ trước khi rơi xuống đáy!`;
+  document.addEventListener('keydown', gameKeyHandler);
+  spawnFallingLetter(f, speed);
+}
+function spawnFallingLetter(f, speed){
+  if(!state.running) return;
+  const letter = f.letters[Math.floor(Math.random()*f.letters.length)];
+  const el = document.createElement('div');
+  el.className='falling-letter';
+  el.textContent = letter;
+  el.style.left = (10 + Math.random()*80) + '%';
+  el.style.top = '0px';
+  gamePanel.appendChild(el);
+  state.gameActiveLetter = {el, letter, resolved:false};
+  const panelHeight = gamePanel.clientHeight - 40;
+  const startTime = Date.now();
+  function step(){
+    if(!state.running){ return; }
+    if(state.gameActiveLetter && state.gameActiveLetter.el === el && !state.gameActiveLetter.resolved){
+      const elapsed = Date.now()-startTime;
+      const progress = Math.min(1, elapsed/speed.ms);
+      el.style.top = (progress*panelHeight)+'px';
+      if(progress>=1){
+        state.gameActiveLetter.resolved = true;
+        el.remove();
+        state.gameSpawnId = setTimeout(()=>spawnFallingLetter(f,speed), 300);
+      } else {
+        requestAnimationFrame(step);
+      }
+    }
+  }
+  requestAnimationFrame(step);
+}
+function gameKeyHandler(e){
+  if(!state.running) return;
+  if(document.getElementById('game-panel').classList.contains('hidden')) return;
+  const key = e.key.toLowerCase();
+  if(state.gameActiveLetter && !state.gameActiveLetter.resolved && key === state.gameActiveLetter.letter){
+    const caught = state.gameActiveLetter;
+    caught.resolved = true;
+    caught.el.classList.add('caught');
+    setTimeout(()=>{ if(caught.el && caught.el.parentNode) caught.el.remove(); }, 180);
+    state.gameCatches++;
+    state.wordsCount = state.gameCatches;
+    document.getElementById('ex-count').textContent = state.wordsCount;
+    const f = FINGERS.find(x=>x.id===state.finger);
+    const speed = SPEEDS.find(s=>s.id===state.speed);
+    clearTimeout(state.gameSpawnId);
+    spawnFallingLetter(f, speed);
+  }
+}
+
+/* ---------- TIMER / END ---------- */
+/* Đồng hồ tính theo mốc thời gian thực (Date.now()) thay vì đếm lùi từng
+   giây - tránh bị "kẹt" hoặc chạy sai khi trình duyệt giảm tốc độ hẹn giờ
+   lúc tab bị ẩn/ở chế độ nền. */
+function computeTimeLeft(){
+  const now = Date.now();
+  const elapsedSec = Math.floor((now - state.startTimestamp) / 1000);
+  return Math.max(0, 900 - elapsedSec);
+}
+function startTimer(){
+  state.startTimestamp = Date.now();
+  state.timeLeft = 900;
+  updateTimerDisplay();
+  clearInterval(state.timerId);
+  state.timerId = setInterval(()=>{
+    state.timeLeft = computeTimeLeft();
+    updateTimerDisplay();
+    if(state.timeLeft<=0){
+      finishExercise(false);
+    }
+  },500);
+}
+function updateTimerDisplay(){
+  const m = Math.floor(state.timeLeft/60), s = state.timeLeft%60;
+  document.getElementById('ex-timer').textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+document.getElementById('end-btn').addEventListener('click', ()=>finishExercise(false));
+
+async function finishExercise(completedFullText){
+  if(!state.running) return;
+  state.running = false;
+  clearInterval(state.timerId);
+  clearTimeout(state.gameSpawnId);
+  document.removeEventListener('keydown', gameKeyHandler);
+
+  const grade = getActiveGrade();
+  const isGameMode = grade.kind==='lop2' && state.lop2Mode==='game' && !grade.isCompetition;
+
+  const name = document.getElementById('stu-name').value.trim();
+  const cls = document.getElementById('stu-class').value.trim();
+  const elapsedSec = 900 - state.timeLeft;
+  const durationStr = `${String(Math.floor(elapsedSec/60)).padStart(2,'0')}:${String(elapsedSec%60).padStart(2,'0')}`;
+  const words = state.wordsCount;
+  const letters = isGameMode ? state.gameCatches : state.idx;
+  const correctWords = Math.max(0, words - state.wrongWords);
+
+  let modeLabel = grade.name;
+  if(!grade.isCompetition && grade.kind==='lop2') modeLabel += state.lop2Mode==='game' ? ' (Trò chơi)' : ' (Luyện gõ)';
+
+  const now = new Date();
+  const record = {
+    id: 'r'+now.getTime()+Math.random().toString(36).slice(2,7),
+    name, class: cls,
+    gradeId: grade.id,
+    dateISO: now.toISOString(),
+    dateStr: now.toLocaleDateString('vi-VN'),
+    duration: durationStr,
+    mode: modeLabel,
+    target: grade.target,
+    words: words,
+    letters: letters,
+    wrongWords: state.wrongWords,
+    isCompetition: !!grade.isCompetition,
+    khoiLabel: grade.khoiLabel || '',
+    roundLabel: grade.roundLabel || '',
+  };
+
+  /* Hiển thị kết quả NGAY LẬP TỨC bằng dữ liệu đã có sẵn cục bộ, không chờ
+     mạng LAN - để bấm "Kết thúc" luôn phản hồi tức thì. Việc lưu lên máy chủ
+     và tính tăng/giảm so với lần trước sẽ chạy ngầm phía sau. */
+  if(completedFullText && state.timeLeft>0){
+    celebrate();
+  }
+  document.getElementById('result-title').textContent = completedFullText ? '🎉 Hoàn thành xuất sắc!' : 'Kết quả luyện tập';
+  document.getElementById('result-words').textContent = words + ' chữ';
+  document.getElementById('result-sub').textContent = `${modeLabel} · Thời gian thực hiện: ${durationStr} · Mục tiêu: ${grade.target} · Chữ gõ sai: ${state.wrongWords}`;
+  const diffEl = document.getElementById('result-diff');
+  diffEl.innerHTML = '<span class="diff-same">Đang lưu kết quả...</span>';
+  document.getElementById('result-modal').classList.remove('hidden');
+
+  try{
+    const prevList = await loadResults();
+    const prevForStudent = prevList.filter(r=>r.name===name).sort((a,b)=>new Date(a.dateISO)-new Date(b.dateISO));
+    const lastPrev = prevForStudent.length ? prevForStudent[prevForStudent.length-1] : null;
+    const diff = lastPrev ? correctWords - correctWordsOf(lastPrev) : null;
+    prevList.push(record);
+    await saveResults(prevList);
+
+    if(diff===null){ diffEl.innerHTML = '<span class="diff-same">Đây là lần luyện tập đầu tiên của em!</span>'; }
+    else if(diff>0){ diffEl.innerHTML = `<span class="diff-up">▲ Tăng ${diff} chữ so với lần gần nhất</span>`; }
+    else if(diff<0){ diffEl.innerHTML = `<span class="diff-down">▼ Giảm ${Math.abs(diff)} chữ so với lần gần nhất</span>`; }
+    else { diffEl.innerHTML = '<span class="diff-same">Bằng với lần gần nhất</span>'; }
+  }catch(e){
+    diffEl.innerHTML = '<span class="diff-same">Đã lưu kết quả (không tính được mức tăng/giảm)</span>';
+  }
+}
+
+document.getElementById('result-ok-btn').addEventListener('click', ()=>{
+  document.getElementById('result-modal').classList.add('hidden');
+  exerciseScreen.classList.add('hidden');
+  homeScreen.classList.remove('hidden');
+  gamePanel.innerHTML = '<div id="game-hint"></div>';
+});
+
+/* ============================ CELEBRATION (fireworks + sound) ============================ */
+function celebrate(){
+  playFanfare();
+  const canvas = document.getElementById('celebrate-canvas');
+  canvas.classList.remove('hidden');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  let particles = [];
+  const colors = ['#df1c33','#f0b429','#f8d979','#2f8f46','#1b3b6f','#ffffff'];
+  function burst(x,y){
+    for(let i=0;i<45;i++){
+      const angle = Math.random()*Math.PI*2;
+      const speed = 2+Math.random()*5;
+      particles.push({x,y,vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:60+Math.random()*30, color:colors[Math.floor(Math.random()*colors.length)]});
+    }
+  }
+  let bursts = 0;
+  const burstInterval = setInterval(()=>{
+    burst(Math.random()*canvas.width, canvas.height*0.2+Math.random()*canvas.height*0.4);
+    bursts++;
+    if(bursts>=6) clearInterval(burstInterval);
+  }, 500);
+  burst(canvas.width/2, canvas.height*0.35);
+  let frames = 0;
+  function anim(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+      p.x+=p.vx; p.y+=p.vy; p.vy+=0.06; p.life--;
+      ctx.globalAlpha = Math.max(p.life/90,0);
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,3,0,Math.PI*2); ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    particles = particles.filter(p=>p.life>0);
+    frames++;
+    if(frames<400) requestAnimationFrame(anim);
+    else { canvas.classList.add('hidden'); ctx.clearRect(0,0,canvas.width,canvas.height); }
+  }
+  anim();
+}
+function playFanfare(){
+  try{
+    const AC = window.AudioContext || window.webkitAudioContext;
+    const ctx = new AC();
+    const notes = [523.25,659.25,783.99,1046.50];
+    notes.forEach((freq,i)=>{
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type='triangle'; osc.frequency.value=freq;
+      osc.connect(gain); gain.connect(ctx.destination);
+      const t0 = ctx.currentTime + i*0.15;
+      gain.gain.setValueAtTime(0.0001, t0);
+      gain.gain.exponentialRampToValueAtTime(0.25, t0+0.05);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t0+0.4);
+      osc.start(t0); osc.stop(t0+0.45);
+    });
+  }catch(e){}
+}
+
+/* ============================ TEACHER VIEW ============================ */
+let teacherActiveTab = 'name';
+const TEACHER_PASSWORD = 'vietnhat2026'; // Giáo viên có thể đổi mật khẩu tại đây
+let teacherUnlocked = false;
+
+function showTeacherLogin(){
+  return new Promise(resolve=>{
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.style.zIndex = 200;
+    overlay.innerHTML = `<div class="modal-box" style="max-width:380px;">
+      <h2 style="margin-top:0; color:var(--red-700);">🔒 Đăng nhập Giáo viên</h2>
+      <p style="color:var(--ink-soft); font-size:13.5px; margin-top:-4px;">Nhập mật khẩu để xem bảng tổng hợp kết quả học sinh.</p>
+      <input type="password" id="teacher-pass-input" placeholder="Mật khẩu" style="width:100%; padding:10px 12px; border-radius:10px; border:2px solid #e4d3c0; font-size:14.5px; margin:8px 0; font-family:'Be Vietnam Pro',sans-serif;">
+      <div id="teacher-pass-err" style="color:var(--err); font-size:12.5px; min-height:16px;"></div>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:8px;">
+        <button id="pass-cancel" style="padding:9px 18px; border-radius:8px; border:2px solid #ccc; background:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Hủy</button>
+        <button id="pass-submit" style="padding:9px 18px; border-radius:8px; border:none; background:var(--red-600); color:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Đăng nhập</button>
+      </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    const input = overlay.querySelector('#teacher-pass-input');
+    const err = overlay.querySelector('#teacher-pass-err');
+    setTimeout(()=>input.focus(), 50);
+    const cleanup = (val)=>{ overlay.remove(); resolve(val); };
+    overlay.querySelector('#pass-cancel').onclick = ()=>cleanup(false);
+    function trySubmit(){
+      if(input.value === TEACHER_PASSWORD){ cleanup(true); }
+      else{ err.textContent = 'Sai mật khẩu, vui lòng thử lại.'; input.value=''; input.focus(); }
+    }
+    overlay.querySelector('#pass-submit').onclick = trySubmit;
+    input.addEventListener('keydown', e=>{ if(e.key==='Enter') trySubmit(); });
+    overlay.addEventListener('click', e=>{ if(e.target===overlay) cleanup(false); });
+  });
+}
+
+document.getElementById('teacher-btn').addEventListener('click', async ()=>{
+  if(teacherUnlocked){ openTeacherModal(); return; }
+  const ok = await showTeacherLogin();
+  if(ok){ teacherUnlocked = true; openTeacherModal(); }
+});
+
+/* ---------- Cài đặt máy chủ LAN ---------- */
+function showServerConfig(){
+  return new Promise(resolve=>{
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.style.zIndex = 200;
+    const current = getServerEndpoint();
+    overlay.innerHTML = `<div class="modal-box" style="max-width:440px;">
+      <h2 style="margin-top:0; color:var(--red-700);">🌐 Cài đặt máy chủ LAN</h2>
+      <p style="color:var(--ink-soft); font-size:13.5px; line-height:1.6; margin-top:-4px;">
+        Nhập địa chỉ máy chủ dữ liệu đang chạy trong phòng máy (do giáo viên/quản trị khởi động trên máy chủ),
+        ví dụ: <code>http://192.168.1.10:8899</code>. Mọi máy trong phòng cài cùng một địa chỉ này sẽ dùng chung một bảng kết quả.
+      </p>
+      <input type="text" id="server-url-input" placeholder="http://192.168.1.10:8899" value="${current.replace(/"/g,'&quot;')}"
+        style="width:100%; padding:10px 12px; border-radius:10px; border:2px solid #e4d3c0; font-size:14px; margin:8px 0; font-family:'JetBrains Mono',monospace;">
+      <div id="server-test-msg" style="font-size:12.5px; min-height:18px; color:var(--ink-soft);"></div>
+      <div style="display:flex; gap:10px; justify-content:space-between; margin-top:10px; flex-wrap:wrap;">
+        <button id="server-clear" style="padding:9px 14px; border-radius:8px; border:2px solid #ccc; background:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Bỏ kết nối</button>
+        <div style="display:flex; gap:8px;">
+          <button id="server-cancel" style="padding:9px 18px; border-radius:8px; border:2px solid #ccc; background:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Hủy</button>
+          <button id="server-test" style="padding:9px 18px; border-radius:8px; border:none; background:var(--gold-500); color:var(--red-900); cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Kiểm tra</button>
+          <button id="server-save" style="padding:9px 18px; border-radius:8px; border:none; background:var(--red-600); color:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Lưu</button>
+        </div>
+      </div>
+    </div>`;
+    document.body.appendChild(overlay);
+    const input = overlay.querySelector('#server-url-input');
+    const msg = overlay.querySelector('#server-test-msg');
+    setTimeout(()=>input.focus(), 50);
+    const cleanup = (val)=>{ overlay.remove(); resolve(val); };
+    overlay.querySelector('#server-cancel').onclick = ()=>cleanup(false);
+    overlay.querySelector('#server-clear').onclick = ()=>{ setServerEndpoint(''); updateServerStatusLabel(false); document.getElementById('server-status-label').innerHTML='Máy chủ: <b>chưa kết nối</b>'; cleanup(true); };
+    overlay.querySelector('#server-test').onclick = async ()=>{
+      const url = input.value.trim();
+      if(!url){ msg.textContent='Vui lòng nhập địa chỉ máy chủ.'; msg.style.color='var(--err)'; return; }
+      msg.textContent = 'Đang kiểm tra kết nối...'; msg.style.color='var(--ink-soft)';
+      const ok = await pingServer(url);
+      msg.textContent = ok ? '✔ Kết nối thành công!' : '✕ Không kết nối được. Kiểm tra lại địa chỉ và mạng LAN.';
+      msg.style.color = ok ? 'var(--green)' : 'var(--err)';
+    };
+    overlay.querySelector('#server-save').onclick = async ()=>{
+      const url = input.value.trim();
+      if(!url){ msg.textContent='Vui lòng nhập địa chỉ máy chủ.'; msg.style.color='var(--err)'; return; }
+      setServerEndpoint(url);
+      await loadResults();
+      cleanup(true);
+    };
+    overlay.addEventListener('click', e=>{ if(e.target===overlay) cleanup(false); });
+  });
+}
+document.getElementById('server-config-link').addEventListener('click', async (e)=>{
+  e.preventDefault();
+  await showServerConfig();
+});
+(async function initServerStatus(){
+  const endpoint = getServerEndpoint();
+  if(endpoint){ const ok = await pingServer(endpoint); updateServerStatusLabel(ok); }
+})();
+
+document.querySelectorAll('[data-close]').forEach(b=>{
+  b.addEventListener('click', ()=>document.getElementById(b.dataset.close).classList.add('hidden'));
+});
+function switchTeacherTab(tab){
+  teacherActiveTab = tab;
+  ['name','class','test','comp'].forEach(t=>{
+    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
+    document.getElementById('panel-'+t).classList.toggle('hidden', t!==tab);
+  });
+}
+document.getElementById('tab-name').addEventListener('click', ()=>switchTeacherTab('name'));
+document.getElementById('tab-class').addEventListener('click', ()=>switchTeacherTab('class'));
+document.getElementById('tab-test').addEventListener('click', ()=>switchTeacherTab('test'));
+document.getElementById('tab-comp').addEventListener('click', ()=>switchTeacherTab('comp'));
+
+async function migrateResults(results){
+  let changed = false;
+  results.forEach(r=>{
+    if(!r.id){ r.id = 'r'+Date.now()+Math.random().toString(36).slice(2,7); changed = true; }
+    if(!r.gradeId){
+      const found = GRADES.find(g=>r.mode && r.mode.indexOf(g.name)===0);
+      r.gradeId = found ? found.id : '';
+      changed = true;
+    }
+  });
+  if(changed) await saveResults(results);
+  return results;
+}
+
+async function openTeacherModal(){
+  let results = await loadResults();
+  results = await migrateResults(results);
+  const names = [...new Set(results.map(r=>r.name))].sort();
+  const classes = [...new Set(results.map(r=>r.class))].sort();
+
+  const selStu = document.getElementById('select-student');
+  const selCls = document.getElementById('select-class');
+  const selTestName = document.getElementById('select-test-name');
+  const selTestClass = document.getElementById('select-test-class');
+  const selCompName = document.getElementById('select-comp-name');
+  const selCompClass = document.getElementById('select-comp-class');
+  const selCompRound = document.getElementById('select-comp-round');
+
+  const prevStu = selStu.value, prevCls = selCls.value, prevTN = selTestName.value, prevTC = selTestClass.value;
+  const prevCN = selCompName.value, prevCC = selCompClass.value, prevCR = selCompRound.value;
+
+  selStu.innerHTML = names.map(n=>`<option value="${n}">${n}</option>`).join('') || '<option value="">(Chưa có dữ liệu)</option>';
+  selCls.innerHTML = classes.map(c=>`<option value="${c}">${c}</option>`).join('') || '<option value="">(Chưa có dữ liệu)</option>';
+  selTestName.innerHTML = '<option value="__ALL__">Tất cả học sinh</option>' + names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  selTestClass.innerHTML = '<option value="__ALL__">Tất cả các lớp</option>' + classes.map(c=>`<option value="${c}">${c}</option>`).join('');
+  selCompName.innerHTML = '<option value="__ALL__">Tất cả học sinh</option>' + names.map(n=>`<option value="${n}">${n}</option>`).join('');
+  selCompClass.innerHTML = '<option value="__ALL__">Tất cả các lớp</option>' + classes.map(c=>`<option value="${c}">${c}</option>`).join('');
+  let roundOptions = '<option value="__ALL__">Tất cả các vòng</option>';
+  COMPETITION_KHOI.forEach(k=>{
+    COMPETITION_ROUNDS.forEach(r=>{
+      roundOptions += `<option value="${k.id}-${r.id}">${k.label} · ${r.label}</option>`;
+    });
+  });
+  selCompRound.innerHTML = roundOptions;
+
+  if(names.includes(prevStu)) selStu.value = prevStu;
+  if(classes.includes(prevCls)) selCls.value = prevCls;
+  if(prevTN && (prevTN==='__ALL__' || names.includes(prevTN))) selTestName.value = prevTN;
+  if(prevTC && (prevTC==='__ALL__' || classes.includes(prevTC))) selTestClass.value = prevTC;
+  if(prevCN && (prevCN==='__ALL__' || names.includes(prevCN))) selCompName.value = prevCN;
+  if(prevCC && (prevCC==='__ALL__' || classes.includes(prevCC))) selCompClass.value = prevCC;
+  if(prevCR) selCompRound.value = prevCR;
+
+  const rerenderName = ()=>renderStudentTable(results, selStu.value);
+  const rerenderClass = ()=>renderClassTable(results, selCls.value);
+  const rerenderTest = ()=>renderTestTable(results, selTestName.value, selTestClass.value);
+  const rerenderComp = ()=>renderCompTable(results, selCompName.value, selCompClass.value, selCompRound.value);
+
+  rerenderName(); rerenderClass(); rerenderTest(); rerenderComp();
+  selStu.onchange = rerenderName;
+  selCls.onchange = rerenderClass;
+  selTestName.onchange = rerenderTest;
+  selTestClass.onchange = rerenderTest;
+  selCompName.onchange = rerenderComp;
+  selCompClass.onchange = rerenderComp;
+  selCompRound.onchange = rerenderComp;
+
+  document.getElementById('export-student-btn').onclick = ()=>exportExcel(getStudentRows(results, selStu.value), `KetQua_${selStu.value||'HocSinh'}.xlsx`, true);
+  document.getElementById('export-class-btn').onclick = ()=>exportExcel(getClassRows(results, selCls.value), `KetQua_Lop_${selCls.value||''}.xlsx`, false);
+  document.getElementById('export-test-btn').onclick = ()=>exportExcel(getTestRows(results, selTestName.value, selTestClass.value), `KetQua_KiemTra.xlsx`, true);
+  document.getElementById('export-comp-btn').onclick = ()=>exportExcel(getCompetitionRows(results, selCompName.value, selCompClass.value, selCompRound.value), `KetQua_CuocThi.xlsx`, true);
+
+  document.getElementById('delete-student-btn').onclick = async ()=>{
+    if(!selStu.value) return;
+    const ok = await showConfirm(`Bạn có chắc chắn muốn xóa toàn bộ kết quả của học sinh "${selStu.value}" không?`);
+    if(ok){ await deleteByName(selStu.value); await openTeacherModal(); }
+  };
+  document.getElementById('delete-class-btn').onclick = async ()=>{
+    if(!selCls.value) return;
+    const ok = await showConfirm(`Bạn có chắc chắn muốn xóa toàn bộ kết quả của lớp "${selCls.value}" không?`);
+    if(ok){ await deleteByClass(selCls.value); await openTeacherModal(); }
+  };
+  document.getElementById('delete-all-btn').onclick = async ()=>{
+    const ok = await showConfirm('Bạn có chắc chắn muốn xóa TẤT CẢ dữ liệu kết quả của mọi học sinh không? Hành động này không thể hoàn tác.');
+    if(ok){ await deleteAllResults(); await openTeacherModal(); }
+  };
+
+  switchTeacherTab(teacherActiveTab);
+  document.getElementById('teacher-modal').classList.remove('hidden');
+}
+
+function showConfirm(message){
+  return new Promise(resolve=>{
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.style.zIndex = 200;
+    overlay.innerHTML = `<div class="modal-box" style="max-width:420px;">
+      <h2 style="margin-top:0; color:var(--red-700);">Xác nhận xóa</h2>
+      <p style="color:var(--ink-soft); line-height:1.6;"></p>
+      <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:18px;">
+        <button id="confirm-no" style="padding:9px 18px; border-radius:8px; border:2px solid #ccc; background:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Hủy</button>
+        <button id="confirm-yes" style="padding:9px 18px; border-radius:8px; border:none; background:var(--err); color:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Xóa</button>
+      </div>
+    </div>`;
+    overlay.querySelector('p').textContent = message;
+    document.body.appendChild(overlay);
+    const cleanup = (val)=>{ overlay.remove(); resolve(val); };
+    overlay.querySelector('#confirm-no').onclick = ()=>cleanup(false);
+    overlay.querySelector('#confirm-yes').onclick = ()=>cleanup(true);
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) cleanup(false); });
+  });
+}
+function showAlert(message){
+  return new Promise(resolve=>{
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay';
+    overlay.style.zIndex = 200;
+    overlay.innerHTML = `<div class="modal-box" style="max-width:400px;">
+      <h2 style="margin-top:0; color:var(--red-700);">Thông báo</h2>
+      <p style="color:var(--ink-soft); line-height:1.6;"></p>
+      <div style="display:flex; justify-content:flex-end; margin-top:16px;">
+        <button id="alert-ok" style="padding:9px 20px; border-radius:8px; border:none; background:var(--red-600); color:#fff; cursor:pointer; font-weight:700; font-family:'Baloo 2',sans-serif;">Đã hiểu</button>
+      </div>
+    </div>`;
+    overlay.querySelector('p').textContent = message;
+    document.body.appendChild(overlay);
+    const cleanup = ()=>{ overlay.remove(); resolve(true); };
+    overlay.querySelector('#alert-ok').onclick = cleanup;
+    overlay.addEventListener('click', (e)=>{ if(e.target===overlay) cleanup(); });
+  });
+}
+
+async function deleteResultById(id){
+  const list = await loadResults();
+  await saveResults(list.filter(r=>r.id!==id));
+}
+async function deleteByName(name){
+  const list = await loadResults();
+  await saveResults(list.filter(r=>r.name!==name));
+}
+async function deleteByClass(cls){
+  const list = await loadResults();
+  await saveResults(list.filter(r=>r.class!==cls));
+}
+async function deleteAllResults(){
+  await saveResults([]);
+}
+async function handleRowDelete(id){
+  const ok = await showConfirm('Bạn có chắc chắn muốn xóa kết quả luyện tập này không?');
+  if(ok){ await deleteResultById(id); await openTeacherModal(); }
+}
+window.handleRowDelete = handleRowDelete;
+
+function correctWordsOf(r){
+  const w = typeof r.words==='number' ? r.words : 0;
+  const wrong = typeof r.wrongWords==='number' ? r.wrongWords : 0;
+  return Math.max(0, w - wrong);
+}
+function computeDiffs(rows){
+  const sorted = rows.slice().sort((a,b)=>new Date(a.dateISO)-new Date(b.dateISO));
+  return sorted.map((r,i)=>{
+    const prev = i>0 ? correctWordsOf(sorted[i-1]) : null;
+    return {...r, diff: prev===null ? null : correctWordsOf(r)-prev};
+  });
+}
+function diffHtml(diff){
+  if(diff===null) return '<span class="diff-same">—</span>';
+  if(diff>0) return `<span class="diff-up">▲ +${diff}</span>`;
+  if(diff<0) return `<span class="diff-down">▼ ${diff}</span>`;
+  return '<span class="diff-same">0</span>';
+}
+function delBtn(id){ return `<button class="row-del" onclick="handleRowDelete('${id}')">✕ Xóa</button>`; }
+function getStudentRows(results, name){
+  return computeDiffs(results.filter(r=>r.name===name));
+}
+function getClassRows(results, cls){
+  const rows = results.filter(r=>r.class===cls);
+  const byName = {};
+  rows.forEach(r=>{ (byName[r.name] = byName[r.name]||[]).push(r); });
+  let out = [];
+  Object.values(byName).forEach(list=>out = out.concat(computeDiffs(list)));
+  out.sort((a,b)=>new Date(a.dateISO)-new Date(b.dateISO));
+  return out;
+}
+function getTestRows(results, name, cls){
+  let rows = results.filter(r=>r.gradeId==='kiemtra');
+  if(name && name!=='__ALL__') rows = rows.filter(r=>r.name===name);
+  if(cls && cls!=='__ALL__') rows = rows.filter(r=>r.class===cls);
+  const byName = {};
+  rows.forEach(r=>{ (byName[r.name] = byName[r.name]||[]).push(r); });
+  let out = [];
+  Object.values(byName).forEach(list=>out = out.concat(computeDiffs(list)));
+  out.sort((a,b)=>new Date(a.dateISO)-new Date(b.dateISO));
+  return out;
+}
+function wrongCell(r){ return typeof r.wrongWords==='number' ? r.wrongWords : 0; }
+function correctCell(r){ return correctWordsOf(r); }
+function renderStudentTable(results, name){
+  const rows = getStudentRows(results, name);
+  const tbody = document.querySelector('#table-student tbody');
+  tbody.innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.class}</td><td>${r.dateStr}</td><td>${r.duration}</td><td>${r.mode} · ${r.target}</td><td>${r.words}</td><td>${wrongCell(r)}</td><td>${correctCell(r)}</td><td>${diffHtml(r.diff)}</td><td>${delBtn(r.id)}</td></tr>`).join('') || '<tr><td colspan="11" style="text-align:center; color:var(--ink-soft);">Chưa có dữ liệu</td></tr>';
+}
+function renderClassTable(results, cls){
+  const rows = getClassRows(results, cls);
+  const tbody = document.querySelector('#table-class tbody');
+  tbody.innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.dateStr}</td><td>${r.duration}</td><td>${r.mode} · ${r.target}</td><td>${r.words}</td><td>${wrongCell(r)}</td><td>${correctCell(r)}</td><td>${diffHtml(r.diff)}</td><td>${delBtn(r.id)}</td></tr>`).join('') || '<tr><td colspan="10" style="text-align:center; color:var(--ink-soft);">Chưa có dữ liệu</td></tr>';
+}
+function renderTestTable(results, name, cls){
+  const rows = getTestRows(results, name, cls);
+  const tbody = document.querySelector('#table-test tbody');
+  tbody.innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.class}</td><td>${r.dateStr}</td><td>${r.duration}</td><td>${r.mode} · ${r.target}</td><td>${r.words}</td><td>${wrongCell(r)}</td><td>${correctCell(r)}</td><td>${diffHtml(r.diff)}</td><td>${delBtn(r.id)}</td></tr>`).join('') || '<tr><td colspan="11" style="text-align:center; color:var(--ink-soft);">Chưa có dữ liệu bài Kiểm tra gõ 10 ngón</td></tr>';
+}
+function getCompetitionRows(results, name, cls, roundKey){
+  let rows = results.filter(r=>r.isCompetition===true);
+  if(name && name!=='__ALL__') rows = rows.filter(r=>r.name===name);
+  if(cls && cls!=='__ALL__') rows = rows.filter(r=>r.class===cls);
+  if(roundKey && roundKey!=='__ALL__') rows = rows.filter(r=>r.gradeId==='cuocthi-'+roundKey);
+  const byName = {};
+  rows.forEach(r=>{ (byName[r.name] = byName[r.name]||[]).push(r); });
+  let out = [];
+  Object.values(byName).forEach(list=>out = out.concat(computeDiffs(list)));
+  out.sort((a,b)=>new Date(a.dateISO)-new Date(b.dateISO));
+  return out;
+}
+function renderCompTable(results, name, cls, roundKey){
+  const rows = getCompetitionRows(results, name, cls, roundKey);
+  const tbody = document.querySelector('#table-comp tbody');
+  tbody.innerHTML = rows.map((r,i)=>`<tr><td>${i+1}</td><td>${r.name}</td><td>${r.class}</td><td>${r.khoiLabel} · ${r.roundLabel}</td><td>${r.dateStr}</td><td>${r.duration}</td><td>${r.target}</td><td>${r.words}</td><td>${typeof r.letters==='number' ? r.letters : '—'}</td><td>${wrongCell(r)}</td><td>${correctCell(r)}</td><td>${diffHtml(r.diff)}</td><td>${delBtn(r.id)}</td></tr>`).join('') || '<tr><td colspan="13" style="text-align:center; color:var(--ink-soft);">Chưa có dữ liệu Cuộc thi gõ 10 ngón</td></tr>';
+}
+function exportExcel(rows, filename, includeClass){
+  if(typeof XLSX==='undefined'){ alert('Không thể tải thư viện xuất Excel. Vui lòng kiểm tra kết nối mạng.'); return; }
+  const data = rows.map((r,i)=>{
+    const base = {Stt:i+1, 'Họ tên':r.name};
+    if(includeClass) base['Lớp']=r.class;
+    if(r.isCompetition) base['Vòng thi'] = `${r.khoiLabel} · ${r.roundLabel}`;
+    base['Ngày thực hiện']=r.dateStr; base['Thời gian']=r.duration; base['Mục tiêu']=r.mode ? (r.mode+' - '+r.target) : r.target;
+    base['Số chữ gõ được']=r.words;
+    if(r.isCompetition) base['Số chữ cái gõ được'] = typeof r.letters==='number' ? r.letters : '—';
+    base['Số chữ gõ sai'] = wrongCell(r);
+    base['Số chữ gõ đúng'] = correctCell(r);
+    base['Tăng/giảm']= r.diff===null? '—' : (r.diff>0?'+':'')+r.diff;
+    return base;
+  });
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'KetQua');
+  XLSX.writeFile(wb, filename);
+}
+</script>
+</body>
+</html>
